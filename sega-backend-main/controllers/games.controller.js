@@ -1,40 +1,132 @@
 const Game = require('../models/Game')
 
-// GET
-exports.getGames = async (req, res) => {
-  const games = await Game.find()
-  res.json(games)
-}
-
-// POST
-exports.createGame = async (req, res) => {
-  const game = new Game(req.body)
-  await game.save()
-  res.json(game)
-}
-
-// PUT
-exports.updateGame = async (req, res) => {
-  const game = await Game.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  )
-  res.json(game)
-}
-
-// DELETE
-exports.deleteGame = async (req, res) => {
-  await Game.findByIdAndDelete(req.params.id)
-  res.json({ msg: "Juego eliminado" })
-}
-// GET por ID
-exports.getGameById = async (req, res) => {
+// ===============================
+// GET ALL con PAGINACIÓN + FILTROS
+// ===============================
+exports.getGames = async (req, res, next) => {
   try {
-    const game = await Game.findById(req.params.id);
-    if (!game) return res.status(404).json({ message: "Juego no encontrado" });
-    res.json(game);
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 5
+    const skip = (page - 1) * limit
+
+    let filter = {}
+
+    if (req.query.name) {
+      filter.name = { $regex: req.query.name, $options: "i" }
+    }
+
+    if (req.query.category) {
+      filter.category = req.query.category
+    }
+
+    const total = await Game.countDocuments(filter)
+
+    const games = await Game.find(filter)
+      .skip(skip)
+      .limit(limit)
+
+    res.status(200).json({
+      success: true,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      results: games
+    })
+
   } catch (err) {
-    res.status(500).json({ message: "Error al obtener el juego", error: err.message });
+    next(err)
   }
-};
+}
+
+// ===============================
+// GET por ID
+// ===============================
+exports.getGameById = async (req, res, next) => {
+  try {
+    const game = await Game.findById(req.params.id)
+
+    if (!game)
+      return res.status(404).json({
+        success: false,
+        message: "Juego no encontrado"
+      })
+
+    res.status(200).json({
+      success: true,
+      data: game
+    })
+
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ===============================
+// POST
+// ===============================
+exports.createGame = async (req, res, next) => {
+  try {
+    const game = new Game(req.body)
+    await game.save()
+
+    res.status(201).json({
+      success: true,
+      message: "Juego creado correctamente",
+      data: game
+    })
+
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ===============================
+// PUT
+// ===============================
+exports.updateGame = async (req, res, next) => {
+  try {
+    const game = await Game.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    )
+
+    if (!game)
+      return res.status(404).json({
+        success: false,
+        message: "Juego no encontrado"
+      })
+
+    res.status(200).json({
+      success: true,
+      message: "Juego actualizado correctamente",
+      data: game
+    })
+
+  } catch (err) {
+    next(err)
+  }
+}
+
+// ===============================
+// DELETE
+// ===============================
+exports.deleteGame = async (req, res, next) => {
+  try {
+    const game = await Game.findByIdAndDelete(req.params.id)
+
+    if (!game)
+      return res.status(404).json({
+        success: false,
+        message: "Juego no encontrado"
+      })
+
+    res.status(200).json({
+      success: true,
+      message: "Juego eliminado correctamente"
+    })
+
+  } catch (err) {
+    next(err)
+  }
+}

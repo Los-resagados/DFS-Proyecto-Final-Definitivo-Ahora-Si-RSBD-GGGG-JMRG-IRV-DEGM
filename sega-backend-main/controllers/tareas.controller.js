@@ -15,27 +15,48 @@ const filePath = path.join(__dirname, "..", "tareas.json");
 
 // Obtener todas
 exports.getTareas = async (req, res, next) => {
-    try {
-        const data = await fs.readFile(filePath, "utf-8");
-        let tareas = JSON.parse(data);
+  try {
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 5
+    const skip = (page - 1) * limit
 
-        // si no es admin solo ve sus tareas
-        if (req.user.role !== "admin") {
-            tareas = tareas.filter(t => t.asignadaA === req.user.username);
-        }
+    const data = await fs.readFile(filePath, "utf-8")
+    let tareas = JSON.parse(data)
 
-        // formatear fechas
-        tareas = tareas.map(t => ({
-            ...t,
-            fechaPublicacion: formatearFecha(t.fechaPublicacion),
-            fechaLimite: formatearFecha(t.fechaLimite)
-        }));
-
-        res.json(tareas);
-
-    } catch (err) {
-        next(err);
+    // Si no es admin, solo ve sus tareas
+    if (req.user.role !== "admin") {
+      tareas = tareas.filter(t => t.asignadaA === req.user.username)
     }
+
+    // FILTRO POR TITULO
+    if (req.query.titulo) {
+      tareas = tareas.filter(t =>
+        t.titulo.toLowerCase().includes(req.query.titulo.toLowerCase())
+      )
+    }
+
+    const total = tareas.length
+
+    const paginated = tareas.slice(skip, skip + limit)
+
+    const formatted = paginated.map(t => ({
+      ...t,
+      fechaPublicacion: formatearFecha(t.fechaPublicacion),
+      fechaLimite: formatearFecha(t.fechaLimite)
+    }))
+
+    res.status(200).json({
+      success: true,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      results: formatted
+    })
+
+  } catch (err) {
+    next(err)
+  }
+
 };
 
 
