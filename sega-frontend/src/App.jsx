@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import EditorJuegos from "./pages/EditorJuegos";
 import GestorTareas from "./pages/GestorTareas";
 import ProtectedRoute from "./components/ProtectedRoute";
+import External from "./pages/External";
 
 function App() {
   return (
@@ -34,6 +35,15 @@ function App() {
           element={
             <ProtectedRoute>
               <GestorTareas />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/external"
+          element={
+            <ProtectedRoute>
+              <External />
             </ProtectedRoute>
           }
         />
