@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Tareas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/paginas.css">
+    <link rel="stylesheet" href="../styles/gestores.css">
+
+</head>
+<body class="admin-body">
+
+    <!-- Header -->
+    <header class="header-game">
+        <div class="menu sega">
+            <a href="../index.html" class="logo">
+                <img src="../IMGS/SEGALOGO2.png" alt="Logo SEGA">
+            </a>
+
+            <div class="menu-toggle">☰</div>
+            
+            <nav class="navbar">
+                <ul>
+                    <li class="user-menu">
+                        <button id="login-btn" class="btn-user">Iniciar sesión</button>
+                        <div id="user-dropdown" class="user-dropdown hidden">
+                            <button id="logout-btn">Cerrar sesión</button>
+                            <button id="switch-btn">Cambiar usuario</button>
+                        </div>
+                    </li>
+                    <li><a href="../index.html#inicio">Inicio</a></li>
+                    <li><a href="../index.html#juegos">Juegos</a></li>
+                    <li><a href="../index.html#info">Información</a></li>
+                    <li><a href="../index.html#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="panel-container">
+        <h1 style="text-align:center; margin-bottom:25px;">Gestor de Tareas</h1>
+        <p id="contador" class="contador" style="text-align:center;"></p>
+
+        <div class="panel-grid">
+
+            <!-- PANEL IZQUIERDO (CREAR TAREA) -->
+            <section class="panel-card" id="crear-tarea-panel">
+
+                <h2>Crear tarea</h2>
+
+                <div class="task-input" id="admin-panel">
+                    <input type="text" id="tituloTarea" placeholder="Título de la tarea">
+
+                    <!-- select personalizado -->
+                     <div class="custom-select" id="editorAsignadoWrapper">
+                        <div class="selected">Asignar a editor...</div>
+                        <ul class="options"></ul>
+                    </div>
+                    <!-- Fecha límite con label arriba -->
+                     <div class="fecha-wrapper">
+                        <label for="fechaLimite">Fecha límite:</label>
+                        <input type="date" id="fechaLimite">
+                    </div>
+                    
+                    <button id="agregar" class="btn-admin">Crear tarea</button>
+
+                </div>
+
+                <button id="ir-editor" class="btn-admin">Ir a Editor de Juegos</button>
+
+            </section>
+
+
+            <!-- PANEL DERECHO (LISTA) -->
+            <section class="panel-card">
+
+                <h2>Tareas</h2>
+                <ul id="listaTareas"></ul>
+
+            </section>
+
+        </div>
+    </main>
+
+
+    <script src="app.js" defer></script>
+
+    <!-- Botón volver a inicio -->
+    <a href="../ACT_2/salaadmin.html" class="btn-volver" title="Volver al inicio">
+        ⬅
+    </a>
+  <script>
+    // Menu hamburguesa
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navbar = document.querySelector('.navbar');
+    menuToggle.addEventListener('click', () => {
+      navbar.classList.toggle('active');
+    });
+  </script>
+<script>
+  // Usar un nombre distinto para evitar choque con app.js
+
+  const currentUser = JSON.parse(localStorage.getItem("loggedUser"));
+  // CONTROL DE ACCESO
+  if (!currentUser) {
+        alert("Debes iniciar sesión");
+        window.location.href = "../AVANCPROYECTO/login.html";
+    }
+
+    if (currentUser.role === "user") {
+        alert("No tienes permisos para entrar aquí");
+        window.location.href = "../index.html";
+    }
+
+  // ================= Ocultar panel de crear tareas a editores =================
+  const crearTareaPanel = document.getElementById("crear-tarea-panel");
+  if (currentUser.role !== "admin" && crearTareaPanel) {
+      crearTareaPanel.style.display = "none";
+  }
+
+
+
+
+  // CONTROL DE ACCESO
+  if (!currentUser) {
+      alert("Debes iniciar sesión");
+      window.location.href = "../AVANCPROYECTO/login.html";
+  }
+
+  // usuarios normales NO pueden entrar
+  if (currentUser.role === "user") {
+      alert("No tienes permisos para entrar aquí");
+      window.location.href = "../index.html";
+  }
+  
+
+  /* ===== Botón sesión ===== */
+  const loginBtn = document.getElementById("login-btn");
+  const dropdown = document.getElementById("user-dropdown");
+  const logoutBtn = document.getElementById("logout-btn");
+  const switchBtn = document.getElementById("switch-btn");
+
+  /* ===== ESTADO SIN USUARIO ===== */
+  if (!currentUser) {
+      loginBtn.textContent = "Iniciar sesión";
+      loginBtn.addEventListener("click", () => {
+          window.location.href = "../AVANCPROYECTO/login.html";
+      });
+  } 
+  /* ===== ESTADO CON USUARIO ===== */
+  else {
+      loginBtn.textContent = currentUser.username;
+
+      loginBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle("hidden");
+      });
+
+      // Cerrar sesión
+      logoutBtn.addEventListener("click", () => {
+          localStorage.removeItem("loggedUser");
+          dropdown.classList.add("hidden");
+          loginBtn.textContent = "Iniciar sesión";
+
+          window.location.href = "../AVANCPROYECTO/login.html";
+      });
+
+      // Cambiar usuario
+      switchBtn.addEventListener("click", () => {
+          localStorage.removeItem("loggedUser");
+          window.location.href = "../AVANCPROYECTO/login.html";
+      });
+  }
+
+  // Click fuera cierra menú
+  document.addEventListener("click", () => {
+      dropdown.classList.add("hidden");
+  });
+</script>
+
+
+</body>
+</html>

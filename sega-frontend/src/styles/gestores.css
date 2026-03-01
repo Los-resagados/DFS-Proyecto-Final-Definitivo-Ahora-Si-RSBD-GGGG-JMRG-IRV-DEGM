@@ -1,0 +1,583 @@
+/* =========================================================
+   LAYOUT ADMIN GLOBAL
+========================================================= */
+
+:root{
+    --header-h: 90px;
+    --admin-primary: #0063ff;
+    --admin-primary-hover: #0050cc;
+}
+
+body.admin-body{
+    padding-top: var(--header-h);
+}
+
+/* contenedor general */
+.panel-container{
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+/* grid principal (2 columnas en PC) */
+.panel-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* tarjetas */
+.panel-card{
+    background: rgba(0,0,0,0.75);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    width: 100%;
+}
+
+/* títulos */
+.panel-card h1,
+.panel-card h2{
+    margin-top: 0;
+    text-align: center;
+}
+
+/* =========================================================
+   FORMULARIO EDITOR DE JUEGOS
+========================================================= */
+
+#form-juego{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:15px;
+}
+
+#form-juego label{
+    grid-column: span 2;
+    text-align:left;
+    font-weight:500;
+}
+
+#form-juego input,
+#form-juego textarea,
+#form-juego select{
+    grid-column: span 2;
+    width:100%;
+}
+
+#form-juego .half{
+    grid-column: span 1;
+}
+
+#form-juego button{
+    grid-column: span 2;
+    margin-top:10px;
+}
+
+/* modo lectura */
+.solo-lectura button,
+.solo-lectura input[type="checkbox"]{
+    pointer-events:none;
+    opacity:.5;
+}
+
+/* =========================================================
+   FORMULARIO TAREAS
+========================================================= */
+
+.task-input{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+/* aplicable a inputs/selects/botones dentro del task-input */
+.task-input input,
+.task-input select,
+.task-input button{
+    width:100%;
+}
+
+/* titulo ocupa toda la fila */
+#tituloTarea{ grid-column: span 2; }
+
+/* =========================================================
+   ITEM DE TAREA
+========================================================= */
+
+.tarea-item{
+    display:grid;
+    grid-template-columns: 1fr auto auto;
+    align-items:center;
+    gap:18px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+    min-height:48px;
+}
+
+/* izquierda */
+.tarea-izq{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
+/* centro */
+.tarea-info{
+    text-align:left;
+    font-size:0.8rem;
+    opacity:0.85;
+    white-space:nowrap;
+}
+
+/* derecha */
+.tarea-botones{
+    display:flex;
+    gap:8px;
+    justify-self:end;
+}
+
+/* =========================================================
+   CHECKBOX PERSONALIZADO
+========================================================= */
+
+.tarea-izq input[type="checkbox"]{
+    appearance:none;
+    min-width:16px;
+    min-height:16px;
+    width:16px;
+    height:16px;
+    border:2px solid #38ffee;
+    border-radius:4px;
+    cursor:pointer;
+    position:relative;
+    background:transparent;
+    flex-shrink:0;
+}
+
+.tarea-izq input[type="checkbox"]:hover{
+    transform: scale(1.1);
+}
+
+.tarea-izq input[type="checkbox"]:checked{
+    background:#38ffee;
+}
+
+.tarea-izq input[type="checkbox"]:checked::after{
+    content:"✔";
+    position:absolute;
+    font-size:10px;
+    color:black;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -58%);
+    font-weight:bold;
+}
+
+/* texto */
+.tarea-texto{
+    text-align:left;
+    word-break:break-word;
+    font-weight:500;
+}
+
+/* completada */
+.completada .tarea-texto{
+    text-decoration:line-through;
+    opacity:0.6;
+}
+
+/* vencida */
+.vencida .tarea-texto{
+    color:#ff6b6b;
+    font-weight:600;
+}
+
+/* botones */
+.tarea-botones .editar{
+    background-color:#ffbb33;
+    color:black;
+}
+
+.tarea-botones .eliminar{
+    background-color:#c60000;
+    color:white;
+}
+
+/* =========================================================
+   RESPONSIVE (TODO EL PANEL)
+========================================================= */
+
+@media (max-width: 900px){
+
+    .panel-grid{
+        grid-template-columns: 1fr;
+    }
+
+    #form-juego{
+        grid-template-columns: 1fr;
+    }
+
+    #form-juego button{
+        grid-column: span 1;
+    }
+
+    .task-input{
+        grid-template-columns: 1fr;
+    }
+
+    /* cuando cambia a móvil ocupan 1 columna */
+    #tituloTarea,
+    #editorAsignadoWrapper,
+    #agregar{
+        grid-column: span 1;
+        width:100%;
+        justify-self:stretch;
+    }
+
+    .tarea-item{
+        grid-template-columns: 1fr;
+        gap:8px;
+    }
+
+    .tarea-botones{
+        justify-content:flex-end;
+    }
+}
+
+/* =========================================================
+   ESTÉTICA DEL EDITOR (ANTES EN editorjuegos)
+   SOLO VISUAL — SIN ROMPER GRID
+========================================================= */
+
+/* inputs bonitos (editor) */
+#form-juego input,
+#form-juego textarea{
+    padding:10px;
+    border-radius:6px;
+    border:none;
+}
+
+/* botón guardar */
+/* BOTÓN PRINCIPAL DEL ADMIN */
+.btn-guardar{
+    background-color:var(--admin-primary);
+    color:white;
+    padding:10px 20px;
+    border:none;
+    cursor:pointer;
+    border-radius:6px;
+    transition:0.2s;
+}
+
+.btn-guardar:hover{
+    background-color:var(--admin-primary-hover);
+    transform:translateY(-1px);
+}
+
+/* tabla juegos */
+.tabla-juegos{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.tabla-juegos th,
+.tabla-juegos td{
+    border:1px solid rgba(255,255,255,0.2);
+    padding:12px;
+    text-align:left;
+}
+
+/* botones acciones */
+.btn-del{
+    background:#ff4444;
+    color:white;
+    border:none;
+    padding:5px 10px;
+    border-radius:4px;
+}
+
+.btn-edit{
+    background:#ffbb33;
+    color:black;
+    border:none;
+    padding:5px 10px;
+    border-radius:4px;
+    margin-right:5px;
+}
+
+/* BOTÓN PRINCIPAL REUTILIZABLE (links también) */
+.btn-admin{
+    background-color:var(--admin-primary);
+    color:white;
+    padding:12px 20px;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-block;
+    transition:0.2s;
+}
+
+.btn-admin:hover{
+    background-color:var(--admin-primary-hover);
+    transform:translateY(-2px);
+}
+
+/* =========================================================
+   INPUTS, SELECTS Y TEXTAREAS PERSONALIZADOS
+   (regla única para evitar repetidos)
+========================================================= */
+
+.task-input input,
+.task-input select,
+#form-juego input,
+#form-juego select,
+#form-juego textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid #38ffee;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.task-input input:focus,
+.task-input select:focus,
+#form-juego input:focus,
+#form-juego select:focus,
+#form-juego textarea:focus {
+    border-color: #00f7ff;
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 6px rgba(0,255,255,0.3);
+}
+
+#form-juego textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Placeholder personalizado */
+.task-input input::placeholder,
+.task-input select::placeholder,
+#form-juego input::placeholder,
+#form-juego textarea::placeholder {
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+}
+
+/* Deshabilitados */
+.task-input input:disabled,
+.task-input select:disabled,
+#form-juego input:disabled,
+#form-juego select:disabled,
+#form-juego textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   SELECT PERSONALIZADO (editor nativo)
+========================================================= */
+
+.task-input select,
+#form-juego select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid #38ffee;
+    border-radius: 8px;
+    color: #fff;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+/* efecto focus para select nativo */
+.task-input select:focus,
+#form-juego select:focus {
+    border-color: #00f7ff;
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 6px rgba(0,255,255,0.3);
+}
+
+/* flecha personalizada (nativo) */
+.task-input select {
+    background-image: linear-gradient(45deg, transparent 50%, #38ffee 50%),
+                      linear-gradient(135deg, #38ffee 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(50% - 3px),
+                         calc(100% - 15px) calc(50% - 3px);
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+}
+
+.task-input select:hover,
+#form-juego select:hover {
+    border-color: #00f7ff;
+}
+
+/* ================= CUSTOM SELECT (para editorAsignado) ================= */
+.custom-select {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    cursor: pointer;
+    padding: 0; /* quitamos padding aquí, se aplica en .selected */
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+/* div que muestra la opción seleccionada */
+.custom-select .selected {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid #38ffee; /* único borde visible */
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* flecha */
+.custom-select .selected::after {
+    content: "";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    border: solid #38ffee;
+    border-width: 0 2px 2px 0;
+    padding: 4px;
+    pointer-events: none;
+}
+
+/* lista de opciones */
+.custom-select .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #38ffee;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    display: none;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+/* items */
+.custom-select .options li {
+    padding: 10px 12px;
+    list-style: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.custom-select .options li:hover {
+    background: #38ffee;
+    color: black;
+}
+
+/* ocultar el select nativo si existe dentro del wrapper */
+#editorAsignadoWrapper select {
+    display: none;
+}
+
+/* ================= Alinear select personalizado ================= */
+#editorAsignadoWrapper {
+    grid-column: span 2;
+    justify-self: start;
+    width: 100%;
+    margin-bottom: 6px; /* usamos la versión más reciente */
+}
+
+#editorAsignadoWrapper .selected {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid #38ffee;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* ================= TAREA - FECHA LÍMITE ================= */
+.fecha-wrapper {
+    display: grid;
+    grid-column: span 2; /* ocupa toda la fila */
+    gap: 6px;            /* espacio entre label e input */
+}
+
+.fecha-wrapper label {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.fecha-wrapper input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 2px solid #38ffee;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.fecha-wrapper input[type="date"]:focus {
+    border-color: #00f7ff;
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 6px rgba(0,255,255,0.3);
+}
+
+/* ================= SELECT Y BOTÓN ================= */
+/* (usamos la versión más reciente: editor wrapper con margin-bottom, y agregar con justify-self:end) */
+#agregar {
+    grid-column: span 2;
+    justify-self: end; /* botón a la derecha */
+    width: 180px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    #editorAsignadoWrapper,
+    .fecha-wrapper,
+    #agregar {
+        grid-column: span 1;
+        width: 100%;
+        justify-self: stretch;
+    }
+}
+
+/* =========================================================
+   ESTILO PARA EDITORES (PANEL DE TAREAS CENTRADO Y MÁS ANCHO)
+========================================================= */
+
+#crear-tarea-panel[style*="display: none"] ~ .panel-card {
+    grid-column: 1 / -1;   /* ocupa toda la fila en grid */
+    max-width: 90%;        /* ocupa casi toda la pantalla */
+    margin: 0 auto;        /* centrado horizontal */
+    padding: 40px 30px;    /* más espacio interno */
+}
+
+#crear-tarea-panel[style*="display: none"] ~ .panel-card h2 {
+    font-size: 2.2rem;     /* título más grande */
+    text-align: center;    /* centrado */
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página SEGA</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/paginas.css">
+</head>
+<body>
+<header class="header">
+    <div class="menu sega">
+        <a href="index.html" class="logo">
+            <img src="IMGS/SEGALOGO2.png" alt="Logo de SEGA">
+        </a>
+
+        <div class="menu-toggle">☰</div>
+
+        <nav class="navbar">
+            <ul>
+                <li class="user-menu">
+                    <button id="login-btn" class="btn-user">Iniciar sesión</button>
+                    <div id="user-dropdown" class="user-dropdown hidden">
+                        <button id="logout-btn">Cerrar sesión</button>
+                        <button id="switch-btn">Cambiar usuario</button>
+                    </div>
+                </li>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#juegos">Juegos</a></li>
+                <li><a href="#info">Información</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="header-content" id="inicio">
+        <h1>SEGA</h1>
+        <p>Somos una importante compañía japonesa de videojuegos, conocida por sus consolas y franquicias icónicas como Sonic the Hedgehog, que ahora se enfoca principalmente en el desarrollo de software. Nuestro nombre es una abreviatura de "Service Games".</p>
+        <p><strong>Orígenes:</strong> Fundada en Japón, SEGA empezó con juegos arcade y se hizo famosa por consolas como la Mega Drive y la Dreamcast.</p>
+        <p><strong>Visión:</strong> Ser un referente global del entretenimiento.</p>
+        <a href="#juegos" class="btn-1">Explorar</a>
+    </div>
+</header>
+
+<main>
+    <section class="juegos" id="juegos">
+        <h2>Proyectos Destacados</h2>
+        
+    </section>
+    
+    
+
+    <section class="informacion" id="info">
+        <div>
+            <h2>Saga Sonic</h2>
+            <img src="IMGS/SONICTHEHEA.png" alt="Saga Sonic">
+            <p>Rápido, intrépido y siempre en movimiento, Sonic recorre mundos con estilo, pasión y mucha actitud.</p>
+        </div>
+
+        <div>
+            <h2>Saga Football Manager</h2>
+            <img src="IMGS/FM26.jpg" alt="Saga Football Manager">
+            <p>Football Manager 26 te ofrece historias que evolucionan para colocarte en el centro del deporte rey.</p>
+        </div>
+
+        <div>
+            <h2>Saga Shinobi</h2>
+            <img src="IMGS/Art of vengeance.png" alt="Saga Shinobi">
+            <p>El icónico SHINOBI regresa en un renovado juego de plataformas 2D con apariencia dibujada a mano.</p>
+        </div>
+    </section>
+
+    <section class="contacto" id="contacto">
+        <h2>Contacto</h2>
+        <form>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="correo">Correo electrónico:</label>
+            <input type="email" id="correo" name="correo" required>
+
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" required></textarea>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </section>
+</main>
+<!-- Botón volver a inicio -->
+<a href="ACT_2/salaadmin.html" class="btn-volver" title="Volver al inicio">
+    ⬅
+</a>
+
+<footer class="footer">
+    <img src="IMGS/SEGALOGO2.png" alt="Logo SEGA">
+    <div class="links">
+        <a href="https://www.facebook.com/SEGA/?locale=es_LA" target="_blank">Facebook</a>
+        <a href="https://www.instagram.com/sega/reels/" target="_blank">Instagram</a>
+        <a href="https://x.com/SEGA" target="_blank">X</a>
+    </div>
+    <p>© 2026 SEGA. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function(e){
+        e.preventDefault();
+        alert("Gracias por tu mensaje, " + document.getElementById("nombre").value + "!");
+    });
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navbar = document.querySelector('.navbar');
+    menuToggle.addEventListener('click', () => {
+        navbar.classList.toggle('active');
+    });
+
+</script>
+<script>
+// Añade solo los juegos creados desde el editor (localStorage: 'juegos_sega')
+(function(){
+    const container = document.querySelector('section.juegos');
+    if (!container) return;
+
+    function getStored() {
+        try { return JSON.parse(localStorage.getItem('juegos_sega') || '[]'); } catch(e){ return []; }
+    }
+
+    function syncStoredOnly() {
+        const stored = Array.isArray(getStored()) ? getStored() : [];
+        const storedIds = new Set(stored.filter(s=>s && !s.deleted).map(s => String(s.id)));
+
+        // Remove previously appended stored-only articles that are no longer in storage
+        container.querySelectorAll('article.project[data-stored-id]').forEach(a => {
+            const id = a.getAttribute('data-stored-id');
+            if (!storedIds.has(id)) a.remove();
+        });
+
+        // Append missing stored-only games
+        stored.forEach(j => {
+            if (!j || j.deleted) return;
+            const id = String(j.id);
+            // if there's already a static link with that id, skip (don't overwrite static list)
+            if (container.querySelector(`a[href*="AVANCPROYECTO/game.html?id=${id}"]`) && !container.querySelector(`article.project[data-stored-id="${id}"]`)) {
+                // if a static article exists, do not append a duplicate stored-only article
+                return;
+            }
+
+            // If we already appended this stored-only article, skip
+            if (container.querySelector(`article.project[data-stored-id="${id}"]`)) return;
+
+            const article = document.createElement('article'); article.className = 'project';
+            article.setAttribute('data-stored-id', id);
+            const h3 = document.createElement('h3'); h3.textContent = j.title || 'Sin título';
+            const a = document.createElement('a'); a.href = 'AVANCPROYECTO/game.html?id=' + encodeURIComponent(id);
+            const img = document.createElement('img'); img.src = (j.image?.startsWith("IMGS") ? j.image : "IMGS/juegos/default.jpg");img.onerror = () => { img.src = 'IMGS/juegos/SINIMGS.png'; }; img.alt = j.title || '';
+            a.appendChild(img);
+            article.appendChild(h3); article.appendChild(a);
+            container.appendChild(article);
+        });
+    }
+
+    // initial sync
+    syncStoredOnly();
+
+    // listen for storage changes
+    window.addEventListener('storage', (ev) => { if (ev.key === 'juegos_sega') syncStoredOnly(); });
+
+})();
+</script>
+<script>
+/* ===== Protección admin ===== */
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+const btnVolver = document.querySelector(".btn-volver");
+
+if (btnVolver && (!loggedUser || loggedUser.role === "user")) {
+    btnVolver.style.display = "none";
+}
+
+/* ===== Botón sesión ===== */
+const loginBtn = document.getElementById("login-btn");
+const dropdown = document.getElementById("user-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
+const switchBtn = document.getElementById("switch-btn");
+
+/* ===== SIN USUARIO ===== */
+if (!loggedUser) {
+    loginBtn.textContent = "Iniciar sesión";
+
+    loginBtn.onclick = () => {
+        window.location.href = "AVANCPROYECTO/login.html";
+    };
+}
+/* ===== CON USUARIO ===== */
+else {
+    loginBtn.textContent = loggedUser.username;
+
+    loginBtn.onclick = (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("hidden");
+    };
+
+    // Cerrar sesión → quedarse en index
+    logoutBtn.onclick = () => {
+        localStorage.removeItem("loggedUser");
+
+        dropdown.classList.add("hidden");
+        loginBtn.textContent = "Iniciar sesión";
+
+        
+        loginBtn.onclick = () => {
+            window.location.href = "AVANCPROYECTO/login.html";
+        };
+    };
+
+    // Cambiar usuario → ir a login
+    switchBtn.onclick = () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "AVANCPROYECTO/login.html";
+    };
+}
+
+// Click fuera cierra menú
+document.addEventListener("click", () => {
+    dropdown.classList.add("hidden");
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+/* ================= Pantalla de Inicio ================= */
+body.inicio {
+    padding-top: 0;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.inicio-container {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.inicio-container h1 { font-size: 2.5rem; }
+
+.opciones {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* ================= Header game.html ================= */
+.header-game {
+    background: none;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.header-game .menu {
+    background-color: rgb(1,1,46);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.header-game .logo img {
+    max-height: 50px;
+    width: auto;
+}
+
+/* ================= LOGIN SEGA ================= */
+body.sonic-login {
+    min-height: 100svh;
+    background: radial-gradient(circle at top, #001b4d, #000814);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+
+.login-container {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 40px 50px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 110, 255, 0.4);
+    animation: fadeIn 0.8s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.logo-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sega-logo {
+    width: 220px;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(0, 120, 255, 0.6));
+}
+
+.sega-title {
+    font-size: 64px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    color: #0063ff;
+    margin-bottom: 10px;
+}
+
+.sonic-subtitle {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #bcd6ff;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #9bbcff;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #0b1c3d;
+    color: white;
+    font-size: 14px;
+}
+
+.start-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0063ff, #00b3ff);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+/* Placeholder */
+.input-group input::placeholder {
+    color: #6f8dcf;
+}
+
+/* Hover botón */
+.start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 140, 255, 0.7);
+}
+
+/* Footer del login */
+.login-container .footer {
+    margin-top: 25px;
+    font-size: 11px;
+    color: #7fa3ff;
+    opacity: 0.85;
+}
+
+/* ================= RESPONSIVE CELULAR Y TABLET ================= */
+@media (max-width: 991px) {
+    .login-container {
+        width: 92%;
+        max-width: none;
+        padding: 40px 25px;
+        min-height: 65vh;
+    }
+
+    .sega-logo {
+        width: 200px;
+        margin-bottom: 25px;
+    }
+
+    .sega-title {
+        font-size: 52px;
+        letter-spacing: 4px;
+        margin-bottom: 12px;
+    }
+
+    .sonic-subtitle {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .input-group label {
+        font-size: 14px;
+        letter-spacing: 1.5px;
+    }
+
+    .input-group input {
+        font-size: 17px;
+        padding: 16px 14px;
+        margin-top: 8px;
+    }
+
+    .start-btn {
+        font-size: 20px;
+        padding: 16px;
+        margin-top: 25px;
+    }
+
+    /* Botón sesión en menú hamburguesa */
+    @media (max-width: 768px) {
+        .navbar ul li {
+            width: 100%;
+        }
+
+        .navbar .btn-user {
+            background: transparent;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            padding: 15px 0;
+            margin-top: 0;
+            border-radius: 0;
+            border: none;
+            text-align: center;
+        }
+    }
+}
+
+/* ================= CELULARES PEQUEÑOS ================= */
+@media (max-width: 480px) {
+    .login-container {
+        width: 96%;
+        min-height: 70vh;
+        padding: 35px 18px;
+    }
+
+    .sega-logo {
+        width: 180px;
+    }
+
+    .sega-title {
+        font-size: 44px;
+    }
+
+    .sonic-subtitle {
+        font-size: 17px;
+    }
+
+    .input-group input {
+        font-size: 18px;
+        padding: 18px 14px;
+    }
+
+    .start-btn {
+        font-size: 20px;
+        padding: 18px;
+    }
+}

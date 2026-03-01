@@ -1,0 +1,330 @@
+/* ================= Reset ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Quitar padding-top global (evita contenido aplastado en móviles).
+   Para páginas con menú fijo, usa la clase .has-menu en el <body> */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(90deg, #050c64, #345EE7, #8FA9FF, #345EE7, #050c64);
+    color: white;
+    line-height: 1.6;
+    padding-top: 0;
+}
+
+.has-menu {
+    padding-top: 60px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ================= Header ================= */
+.header {
+    background-image: url(../IMGS/FondoXD.avif);
+    background-size: cover;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 80px;
+}
+
+.header-content {
+    text-align: center;
+    padding: 100px 20px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    max-width: 800px;
+}
+
+/* ================= Barra superior ================= */
+.menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(1,1,46);
+    padding: 10px 20px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.menu .logo img {
+    max-height: 50px;
+    width: auto;
+}
+
+/* ================= Corrección botón sesión ================= */
+.menu .btn-user {
+    margin-top: 0;
+    width: auto;
+    padding: 8px 14px;
+    line-height: 1;
+}
+
+/* ================= Menú hamburguesa ================= */
+.menu-toggle {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: white;
+}
+
+/* ================= Navbar ================= */
+.navbar ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    transition: 0.3s;
+}
+
+.navbar a:hover { color: aqua; }
+
+/* ===== Botón Usuario =====*/
+.user-menu {
+    position: relative;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.btn-user {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 3001;
+    position: relative;
+    top: auto;
+    transform: none;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: rgba(0,0,0,0.9);
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 3000;
+}
+
+.user-dropdown button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+.user-dropdown button:hover {
+    color: #3b82f6;
+}
+
+.hidden { display: none; }
+
+/* ================= Botón Explorar ================= */
+.btn-1 {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 30px;
+    background-color: rgb(25,11,130);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 2px solid white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.btn-1:hover,
+.btn-1:focus {
+    background-color: rgb(52,94,231);
+    border-color: aqua;
+}
+
+/* ================= Secciones generales ================= */
+.juegos {
+    padding: 60px 20px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+}
+
+.juegos h2 {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.project {
+    margin: 30px auto;
+    max-width: 500px;
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.project:hover { transform: scale(1.05); }
+
+.informacion {
+    padding: 60px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap: 40px;
+    text-align: center;
+}
+
+.contacto {
+    padding: 60px 20px;
+    background-color: rgb(14,21,119);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form { max-width: 400px; margin: auto; }
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-height: 50px;
+    resize: vertical;
+}
+
+@media (max-width: 480px) {
+    input, textarea { min-height: 44px; }
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgb(84,164,255);
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+button:hover { background-color: rgb(52,94,231); }
+
+/* ================= Footer ================= */
+.footer {
+    padding: 30px;
+    text-align: center;
+    border-top: 2px solid aqua;
+    background-color: #111;
+}
+
+.links a { color: white; margin: 0 10px; text-decoration: none; }
+.links a:hover { color: aqua; }
+
+/* ================= Responsive global ================= */
+@media (max-width: 768px) {
+
+    .menu-toggle { display: block; }
+
+    .navbar {
+        display: none;
+        flex-direction: column;
+        background-color: rgb(1,1,46);
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+    }
+
+    .navbar.active { display: flex; }
+
+    .navbar ul {
+        flex-direction: column;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar ul li { width: 100%; }
+
+    .navbar ul li a {
+        display: block;
+        text-align: center;
+        padding: 15px 0;
+        border-top: 1px solid white;
+        width: 100%;
+    }
+
+    .user-menu {
+        order: 0;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .informacion img { max-width: 80%; margin: 0 auto; }
+    form { width: 90%; }
+
+    .contacto form { width: 100%; }
+}
+
+/* ================= Juegos en PC ================= */
+@media (min-width: 992px) {
+    .juegos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ================= Botón Volver ================= */
+.btn-volver {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(25, 11, 130, 0.8);
+    color: white;
+    font-size: 1.5rem;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: 0.3s;
+    z-index: 1000;
+}
+
+.btn-volver:hover {
+    background-color: rgba(52, 94, 231, 0.9);
+    transform: scale(1.1);
+}

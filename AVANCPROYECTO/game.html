@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalles del Juego</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <link rel="stylesheet" href="../styles/paginas.css">
+</head>
+<body class="game-body">
+
+  <!-- Header -->
+  <header class="header-game">
+    <div class="menu sega">
+      <a href="../index.html" class="logo">
+        <img src="../IMGS/SEGALOGO2.png" alt="Logo SEGA">
+      </a>
+
+      <div class="menu-toggle">☰</div>
+      
+      <nav class="navbar">
+        <ul>
+          <li class="user-menu">
+            <button id="login-btn" class="btn-user">Iniciar sesión</button>
+            <div id="user-dropdown" class="user-dropdown hidden">
+              <button id="logout-btn">Cerrar sesión</button>
+              <button id="switch-btn">Cambiar usuario</button>
+            </div>
+          </li>
+          <li><a href="../index.html#inicio">Inicio</a></li>
+          <li><a href="../index.html#juegos">Juegos</a></li>
+          <li><a href="../index.html#info">Información</a></li>
+          <li><a href="../index.html#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <section class="game-title-section">
+    <h1 id="game-title">Cargando...</h1>
+  </section>
+
+  <!-- Contenido principal estilo Steam -->
+  <main style="padding: 20px; max-width: 1200px; margin: auto;">
+    <div class="game-details" style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;">
+
+      <!-- Izquierda: Tráiler + Descripción -->
+      <div class="game-left" style="flex: 1 1 500px; min-width: 300px;">
+        <!-- Tráiler -->
+        <section class="trailer" style="margin-bottom: 30px;">
+          <h2>Tráiler</h2>
+          <div id="game-trailer-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.3);">
+            <!-- iframe se carga desde JS -->
+          </div>
+        </section>
+
+        <!-- Información del juego -->
+        <section class="info-juego">
+          <h2>Información del Juego</h2>
+          <p id="game-description">Cargando información...</p>
+        </section>
+      </div>
+
+      <!-- Derecha: Imagen + Género + Año -->
+      <div class="game-right" style="flex: 0 0 350px; text-align:center;">
+        <img id="game-image" src="../IMGS/juegos/SINIMGS.png" alt="Juego" style="max-width:100%; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.4); margin-bottom: 15px;" onerror="this.onerror=null;this.src='../IMGS/juegos/SINIMGS.png'">
+
+        <p><strong>Género:</strong> <span id="game-genre">-</span></p>
+        <p><strong>Año:</strong> <span id="game-year">-</span></p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Botón volver -->
+  <a href="../index.html#juegos" class="btn-volver" title="Volver al inicio">⬅</a>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <img src="../IMGS/SEGALOGO2.png" alt="Logo SEGA">
+    <div class="links">
+      <a href="https://www.facebook.com/SEGA/?locale=es_LA" target="_blank">Facebook</a>
+      <a href="https://www.instagram.com/sega/reels/" target="_blank">Instagram</a>
+      <a href="https://x.com/SEGA" target="_blank">X</a>
+    </div>
+    <p>© 2026 SEGA. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="game.js"></script>
+  <script>
+    // Menu hamburguesa
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navbar = document.querySelector('.navbar');
+    menuToggle.addEventListener('click', () => {
+      navbar.classList.toggle('active');
+    });
+  </script>
+<script>
+/* ===== Protección admin ===== */
+const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+const btnVolver = document.querySelector(".btn-volver");
+
+/* ===== Botón sesión ===== */
+const loginBtn = document.getElementById("login-btn");
+const dropdown = document.getElementById("user-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
+const switchBtn = document.getElementById("switch-btn");
+
+/* ===== ESTADO SIN USUARIO ===== */
+if (!loggedUser) {
+    loginBtn.textContent = "Iniciar sesión";
+
+    loginBtn.addEventListener("click", () => {
+        window.location.href = "../AVANCPROYECTO/login.html";
+
+    });
+
+} 
+/* ===== ESTADO CON USUARIO ===== */
+else {
+    loginBtn.textContent = loggedUser.username;
+
+    loginBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("hidden");
+    });
+
+    // Cerrar sesión → NO redirige
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        dropdown.classList.add("hidden");
+        loginBtn.textContent = "Iniciar sesión";
+
+        // Cambia comportamiento del botón
+        loginBtn.onclick = () => {
+            window.location.href = "../AVANCPROYECTO/login.html";
+
+        };
+    });
+
+    // Cambiar usuario → SÍ redirige
+    switchBtn.addEventListener("click", () => {
+        localStorage.removeItem("loggedUser");
+        window.location.href = "../AVANCPROYECTO/login.html";
+
+    });
+}
+
+// Click fuera cierra menú
+document.addEventListener("click", () => {
+    dropdown.classList.add("hidden");
+});
+</script>
+
+</body>
+</html>
