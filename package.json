@@ -2,7 +2,7 @@
   "name": "sega-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -24,8 +24,7 @@
     "mongoose": "^9.1.5",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "passport-microsoft": "^2.1.0",
-    "server.js": "^1.0.0"
+    "passport-microsoft": "^2.1.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
