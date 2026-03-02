@@ -1,10 +1,13 @@
 const express = require('express');
 const { body } = require('express-validator');
+const passport = require('passport'); // Importamos passport
 const controller = require('../controllers/auth.controller');
 const validate = require('../middlewares/validateMiddleware');
 
 const router = express.Router();
 
+/** * RUTAS DE AUTENTICACIÓN LOCAL
+ */
 router.post(
   '/login',
   [
@@ -25,6 +28,22 @@ router.post(
   ],
   validate,
   controller.register
+);
+
+
+
+/** * RUTAS DE GOOGLE OAUTH
+ */
+router.get("/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get("/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    // Aquí puedes manejar la lógica tras un login exitoso
+    res.redirect("/"); 
+  }
 );
 
 module.exports = router;

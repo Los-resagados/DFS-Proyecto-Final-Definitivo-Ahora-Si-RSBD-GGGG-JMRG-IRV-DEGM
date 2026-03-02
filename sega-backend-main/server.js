@@ -4,10 +4,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const session = require("express-session");
+
 const app = express();
 
 // ===============================
-// ✅ Verificar variables críticas ANTES de iniciar
+// ✅ Verificar variables críticas
 // ===============================
 if (!process.env.MONGO_URI) {
   console.error("❌ Falta MONGO_URI en el .env");
@@ -19,12 +23,92 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+if (!process.env.GOOGLE_CLIENT_ID) {
+  console.error("❌ Falta GOOGLE_CLIENT_ID en el .env");
+  process.exit(1);
+}
+
+if (!process.env.GOOGLE_CLIENT_SECRET) {
+  console.error("❌ Falta GOOGLE_CLIENT_SECRET en el .env");
+  process.exit(1);
+}
+
 // ===============================
 // ✅ Middlewares básicos
 // ===============================
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // tu frontend
+  credentials: true
+}));
+
 app.use(express.json());
 app.use("/images", express.static("public/images"));
+
+// ===============================
+// ✅ SESSION
+// ===============================
+app.use(
+  session({
+    secret: "segaSecret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// ===============================
+// ✅ PASSPORT
+// ===============================
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ===============================
+// ✅ CONFIGURACIÓN GOOGLE
+// ===============================
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const User = require("./models/User");
+
+        let user = await User.findOne({ googleId: profile.id });
+
+        if (!user) {
+          user = await User.create({
+            username: profile.displayName,
+            googleId: profile.id,
+            email: profile.emails[0].value,
+          });
+        }
+
+        return done(null, user);
+      } catch (error) {
+        return done(error, null);
+      }
+    }
+  )
+);
+
+// ===============================
+// ✅ SERIALIZE / DESERIALIZE
+// ===============================
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const User = require("./models/User");
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
 
 // ===============================
 // ✅ Ruta raíz
@@ -33,13 +117,26 @@ app.get("/", (req, res) => {
   res.json({ success: true, message: "API Sega backend corriendo 🚀" });
 });
 
-// Health check
 app.get("/api/health", (req, res) => {
   res.json({ success: true, status: "ok" });
 });
 
 // ===============================
-// ✅ Conexión a MongoDB
+// ✅ RUTAS GOOGLE AUTH
+// ===============================
+app.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get("/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    res.redirect("http://localhost:5173"); // tu frontend
+  }
+);
+
+// ===============================
+// ✅ Conexión MongoDB
 // ===============================
 mongoose
   .connect(process.env.MONGO_URI)
@@ -55,8 +152,6 @@ mongoose
 app.use("/api/games", require("./routes/games.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/tareas", require("./routes/tareas.routes"));
-
-// 🔥 API EXTERNA (Noticias + RAWG + Pokémon)
 app.use("/api/external", require("./routes/external.routes"));
 
 // ===============================
