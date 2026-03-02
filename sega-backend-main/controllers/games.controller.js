@@ -6,7 +6,7 @@ const Game = require('../models/Game')
 exports.getGames = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 5
+    const limit = parseInt(req.query.limit) || 8
     const skip = (page - 1) * limit
 
     let filter = {}
