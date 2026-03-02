@@ -1,8 +1,25 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 function Dashboard() {
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Capturar token y role de los parámetros de URL (del callback de OAuth)
+    const token = searchParams.get("token");
+    const role = searchParams.get("role");
+
+    if (token && role) {
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+      // Limpiar la URL
+      window.history.replaceState({}, document.title, "/dashboard");
+    }
+  }, [searchParams]);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     window.location.href = "/";
   };
 

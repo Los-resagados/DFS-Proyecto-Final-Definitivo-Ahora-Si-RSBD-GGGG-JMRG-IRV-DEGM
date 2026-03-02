@@ -21,6 +21,14 @@ function Login() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google";
+  };
+
+  const handleMicrosoftLogin = () => {
+    window.location.href = "http://localhost:3000/auth/microsoft";
+  };
+
   return (
     <div>
       <h2>Login</h2>
@@ -28,15 +36,48 @@ function Login() {
         <input
           type="text"
           placeholder="Usuario"
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           placeholder="Contraseña"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit">Ingresar</button>
       </form>
+
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <p>O inicia sesión con:</p>
+        <button 
+          onClick={handleGoogleLogin}
+          style={{
+            marginRight: "10px",
+            padding: "10px 20px",
+            backgroundColor: "#DB4437",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          Google
+        </button>
+        <button 
+          onClick={handleMicrosoftLogin}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#0078D4",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer"
+          }}
+        >
+          Microsoft
+        </button>
+      </div>
     </div>
   );
 }
