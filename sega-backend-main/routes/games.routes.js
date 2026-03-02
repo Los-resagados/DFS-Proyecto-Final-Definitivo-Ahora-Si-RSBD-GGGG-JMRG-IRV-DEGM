@@ -40,6 +40,6 @@ router.put('/:id',
 router.delete('/:id', authMiddleware, allowedRoles('admin'), [param('id').isMongoId().withMessage('ID inválido')], validate, controller.deleteGame);
 
 // obtener un juego por ID (requiere autenticación)
-router.get('/:id', authMiddleware, controller.getGameById);
+router.get('/:id', controller.getGameById);
 
 module.exports = router;

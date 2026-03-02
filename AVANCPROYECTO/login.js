@@ -1,34 +1,53 @@
+const API_URL = "http://localhost:3000/api/auth/login";
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const form = document.getElementById("login-form");
+  const form = document.getElementById("login-form");
 
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const username = form.username.value.trim();
-        const password = form.password.value.trim();
+    const username = form.username.value;
+    const password = form.password.value;
 
-        const user = users.find(u => 
-            u.username === username && u.password === password
-        );
+    try {
 
-        if (user) {
-            // guardar sesión
-            localStorage.setItem("loggedUser", JSON.stringify(user));
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-            if (user.role === "admin") {
-                window.location.href = "../ACT_2/salaadmin.html";
+      const data = await response.json();
 
-            } else if (user.role === "editor") {
-                window.location.href = "../ACT_2/salaadmin.html";
+      if (!response.ok) {
+        alert(data.message || "Credenciales incorrectas");
+        return;
+      }
 
-            } else {
-                window.location.href = "../index.html";
-            }
+      // Guardar sesión
+      localStorage.setItem("loggedUser", JSON.stringify({
+        username: data.username,
+        role: data.role,
+        token: data.token
+      }));
 
-        } else {
-            alert("Usuario o contraseña incorrectos");
-        }
-    });
+      alert("Inicio de sesión exitoso ⚡");
+
+      // Redirección
+      if (data.role === "admin") {
+        window.location.href = "editorjuegos.html";
+      } else {
+        window.location.href = "../index.html";
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo conectar con el servidor");
+    }
+
+  });
 
 });
