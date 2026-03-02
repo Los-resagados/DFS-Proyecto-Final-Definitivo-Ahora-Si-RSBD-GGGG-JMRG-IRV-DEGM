@@ -116,56 +116,55 @@
 
 </script>
 <script>
-// Añade solo los juegos creados desde el editor (localStorage: 'juegos_sega')
-(function(){
-    const container = document.querySelector('section.juegos');
-    if (!container) return;
+/* ===== CARGAR JUEGOS DESDE BACKEND ===== */
 
-    function getStored() {
-        try { return JSON.parse(localStorage.getItem('juegos_sega') || '[]'); } catch(e){ return []; }
-    }
+async function cargarJuegos(page = 1) {
+    try {
+        const res = await fetch(`http://localhost:3000/api/games?page=${page}&limit=6`);
+        const data = await res.json();
 
-    function syncStoredOnly() {
-        const stored = Array.isArray(getStored()) ? getStored() : [];
-        const storedIds = new Set(stored.filter(s=>s && !s.deleted).map(s => String(s.id)));
+        const container = document.querySelector("section.juegos");
+        if (!container) return;
 
-        // Remove previously appended stored-only articles that are no longer in storage
-        container.querySelectorAll('article.project[data-stored-id]').forEach(a => {
-            const id = a.getAttribute('data-stored-id');
-            if (!storedIds.has(id)) a.remove();
-        });
+        // Mantiene el título
+        container.innerHTML = "<h2>Proyectos Destacados</h2>";
 
-        // Append missing stored-only games
-        stored.forEach(j => {
-            if (!j || j.deleted) return;
-            const id = String(j.id);
-            // if there's already a static link with that id, skip (don't overwrite static list)
-            if (container.querySelector(`a[href*="AVANCPROYECTO/game.html?id=${id}"]`) && !container.querySelector(`article.project[data-stored-id="${id}"]`)) {
-                // if a static article exists, do not append a duplicate stored-only article
-                return;
-            }
+        data.results.forEach(juego => {
+            const article = document.createElement("article");
+            article.className = "project";
 
-            // If we already appended this stored-only article, skip
-            if (container.querySelector(`article.project[data-stored-id="${id}"]`)) return;
+            article.innerHTML = `
+                <h3>${juego.title}</h3>
+                <a href="AVANCPROYECTO/game.html?id=${juego._id}">
+                    <img src="${juego.image}" 
+                         alt="${juego.title}"
+                         onerror="this.src='IMGS/juegos/SINIMGS.png'">
+                </a>
+            `;
 
-            const article = document.createElement('article'); article.className = 'project';
-            article.setAttribute('data-stored-id', id);
-            const h3 = document.createElement('h3'); h3.textContent = j.title || 'Sin título';
-            const a = document.createElement('a'); a.href = 'AVANCPROYECTO/game.html?id=' + encodeURIComponent(id);
-            const img = document.createElement('img'); img.src = (j.image?.startsWith("IMGS") ? j.image : "IMGS/juegos/default.jpg");img.onerror = () => { img.src = 'IMGS/juegos/SINIMGS.png'; }; img.alt = j.title || '';
-            a.appendChild(img);
-            article.appendChild(h3); article.appendChild(a);
             container.appendChild(article);
         });
+
+        // ===== PAGINACIÓN VISUAL =====
+        const pagDiv = document.createElement("div");
+        pagDiv.className = "paginacion";
+
+        for (let i = 1; i <= data.totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.textContent = i;
+            btn.onclick = () => cargarJuegos(i);
+            pagDiv.appendChild(btn);
+        }
+
+        container.appendChild(pagDiv);
+
+    } catch (error) {
+        console.error("Error cargando juegos:", error);
     }
+}
 
-    // initial sync
-    syncStoredOnly();
-
-    // listen for storage changes
-    window.addEventListener('storage', (ev) => { if (ev.key === 'juegos_sega') syncStoredOnly(); });
-
-})();
+// Cargar al iniciar
+cargarJuegos();
 </script>
 <script>
 /* ===== Protección admin ===== */

@@ -14,6 +14,7 @@ exports.getGames = async (req, res, next) => {
     if (req.query.title) {
       filter.title = { $regex: req.query.title, $options: "i" }
     }
+
     if (req.query.genre) {
       filter.genre = req.query.genre
     }
@@ -24,6 +25,18 @@ exports.getGames = async (req, res, next) => {
 
     const total = await Game.countDocuments(filter)
 
+    // 👇 SI ES ADMIN Y QUIERE TODOS
+    if (req.query.all === "true") {
+      const games = await Game.find(filter)
+
+      return res.status(200).json({
+        success: true,
+        total,
+        results: games
+      })
+    }
+
+    // 👇 PAGINACIÓN NORMAL (público)
     const games = await Game.find(filter)
       .skip(skip)
       .limit(limit)

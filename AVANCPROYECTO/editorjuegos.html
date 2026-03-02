@@ -177,15 +177,28 @@ async function fetchSeguro(url, options = {}) {
 // ================= CARGAR JUEGOS =================
 async function cargarJuegos() {
     try {
-        const data = await fetchSeguro(API_URL);
-        if (!data) return;
+        const res = await fetch(API_URL);
+        const data = await res.json();
 
         lista.innerHTML = "";
 
-        data.results.forEach(juego => {
+        // Detecta automáticamente cómo viene la respuesta
+        const juegos = data.results || data.data || data;
+
+        if (!Array.isArray(juegos)) {
+            console.error("La respuesta no es un array:", data);
+            return;
+        }
+
+        juegos.forEach(juego => {
+            // Aquí se ajusta la ruta de la imagen
+            const imgSrc = juego.image
+                ? `../IMGS/juegos/${juego.image}` // Ruta relativa correcta
+                : "../IMGS/juegos/SINIMGS.png";   // Imagen por defecto
+
             lista.innerHTML += `
                 <tr>
-                    <td><img src="${juego.image}" width="50"></td>
+                    <td><img src="${imgSrc}" width="50" alt="${juego.title}"></td>
                     <td>${juego.title}</td>
                     <td>${juego.year}</td>
                     <td>
@@ -197,6 +210,7 @@ async function cargarJuegos() {
         });
 
     } catch (err) {
+        console.error("Error cargando juegos:", err);
         alert("Error cargando juegos");
     }
 }

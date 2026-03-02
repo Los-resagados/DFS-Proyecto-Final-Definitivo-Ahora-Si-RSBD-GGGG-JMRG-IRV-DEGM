@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/games";
+const API_URL = "http://localhost:3000/api/games";
 
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
@@ -30,7 +30,9 @@ async function loadGame() {
     titleEl.textContent = game.title;
     genreEl.textContent = game.genre || "-";
     yearEl.textContent = game.year || "-";
-    imageEl.src = game.image || "../IMGS/juegos/SINIMGS.png";
+    imageEl.src = game.image
+    ? `http://localhost:3000/images/juegos/${game.image}`
+    : "http://localhost:3000/images/juegos/SINIMGS.png";
     imageEl.alt = game.title || "";
     descEl.innerHTML = game.description || "Sin descripción";
 
@@ -65,7 +67,7 @@ async function loadGame() {
 
       game.images.forEach(img => {
         const image = document.createElement("img");
-        image.src = img;
+        image.src = `../${img}`;
         image.style.width = "100%";
         image.style.maxWidth = "300px";
         image.style.marginTop = "10px";
@@ -86,7 +88,7 @@ async function loadGame() {
         a.target = "_blank";
 
         const img = document.createElement("img");
-        img.src = store.logo;
+        image.src = `../${img}`;
         img.style.height = "40px";
         img.style.margin = "5px";
 
