@@ -7,101 +7,79 @@
     <link rel="stylesheet" href="../sega-frontend/src/styles/styles.css">
     <link rel="stylesheet" href="../sega-frontend/src/styles/paginas.css">
     <link rel="stylesheet" href="../sega-frontend/src/styles/gestores.css">
-
 </head>
-
-
 
 <body class="game-body editorjuegos admin-body">
 
-  <!-- Header -->
-  <header class="header-game">
-    <div class="menu sega">
-      <a href="../index.html" class="logo">
-        <img src="../IMGS/SEGALOGO2.png" alt="Logo SEGA">
-      </a>
+<!-- ================= HEADER ================= -->
+<header class="header-game">
+  <div class="menu sega">
+    <a href="../index.html" class="logo">
+      <img src="../IMGS/SEGALOGO2.png" alt="Logo SEGA">
+    </a>
 
-      <div class="menu-toggle">☰</div>
+    <div class="menu-toggle">☰</div>
 
-      <nav class="navbar">
-        <ul>
-          <li class="user-menu">
-            <button id="login-btn" class="btn-user">Iniciar sesión</button>
-            <div id="user-dropdown" class="user-dropdown hidden">
-                <button id="logout-btn">Cerrar sesión</button>
-                <button id="switch-btn">Cambiar usuario</button>
-            </div>
-          </li>
-          <li><a href="../index.html#inicio">Inicio</a></li>
-          <li><a href="../index.html#juegos">Juegos</a></li>
-          <li><a href="../index.html#info">Información</a></li>
-          <li><a href="../index.html#contacto">Contacto</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
+    <nav class="navbar">
+      <ul>
+        <li class="user-menu">
+          <button id="login-btn" class="btn-user">Iniciar sesión</button>
+          <div id="user-dropdown" class="user-dropdown hidden">
+              <button id="logout-btn">Cerrar sesión</button>
+              <button id="switch-btn">Cambiar usuario</button>
+          </div>
+        </li>
+        <li><a href="../index.html#inicio">Inicio</a></li>
+        <li><a href="../index.html#juegos">Juegos</a></li>
+        <li><a href="../index.html#info">Información</a></li>
+        <li><a href="../index.html#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
 <!-- ================= PANEL ================= -->
 <div class="panel-container">
-
   <h1 class="panel-title">Editor de Juegos SEGA</h1>
 
   <div class="panel-grid">
 
     <!-- FORMULARIO -->
     <div class="panel-card">
-
       <form id="form-juego">
         <input type="hidden" id="edit-id">
 
         <label>Título del Juego:</label>
-        <input type="text" id="title" required
-            placeholder="Ej: Sonic Frontiers">
+        <input type="text" id="title" required placeholder="Ej: Sonic Frontiers">
 
         <label>Género:</label>
-        <input type="text" id="genre" required
-            placeholder="Ej: Action, Adventure, RPG, Fighting">
+        <input type="text" id="genre" required placeholder="Ej: Action, Adventure, RPG">
 
         <label>Año:</label>
-        <input type="number" id="year" required
-            placeholder="Ej: 2022" min="1980" max="2099">
+        <input type="number" id="year" required min="1980" max="2099">
 
         <label>URL Imagen Portada:</label>
-        <input type="text" id="image" required
-            placeholder="Ej: IMGS/juegos/SONICFRONTIERS.avif">
+        <input type="text" id="image" required>
 
         <label>Descripción:</label>
-        <textarea id="description" rows="3" required
-            placeholder="Descripción larga del juego (modo historia, mecánicas, personajes, etc.)"></textarea>
+        <textarea id="description" rows="3" required></textarea>
 
         <label>URL Tráiler (YouTube embed):</label>
-        <input type="text" id="trailer"
-            placeholder="Ej: https://www.youtube.com/embed/F42pHusbeME">
+        <input type="text" id="trailer">
 
         <label>Sinopsis corta:</label>
-        <textarea id="sinopsis" rows="2"
-            placeholder="Resumen corto de 1 o 2 líneas que aparecerá en la tarjeta del juego"></textarea>
+        <textarea id="sinopsis" rows="2"></textarea>
 
         <label>Galería (URLs separadas por coma):</label>
-        <textarea id="images" rows="2"
-            placeholder="IMGS/juegos/sonic1.webp, IMGS/juegos/sonic2.webp, IMGS/juegos/sonic3.webp"></textarea>
-    
+        <textarea id="images" rows="2"></textarea>
+
         <label>Tiendas (JSON):</label>
-        <textarea id="comprar" rows="4"
-            placeholder='Ej:
-    [
-      {"nombre":"Steam","url":"https://store.steampowered.com/..."},
-      {"nombre":"PlayStation Store","url":"https://store.playstation.com/..."}
-    ]'></textarea>
+        <textarea id="comprar" rows="4"></textarea>
 
         <button type="submit" class="btn-guardar" id="btn-submit">Agregar Juego</button>
         <button type="button" id="btn-cancelar" style="display:none;">Cancelar Edición</button>
-    </form>
-
-
+      </form>
     </div>
-
 
     <!-- TABLA -->
     <div class="panel-card">
@@ -121,129 +99,16 @@
   </div>
 </div>
 
-
-<!-- Botón volver -->
 <a href="../ACT_2/salaadmin.html" class="btn-volver">⬅</a>
 
-
 <script>
-const basePath = "../";
+// ================= MENU RESPONSIVE =================
+document.querySelector('.menu-toggle')
+  .addEventListener('click', () => {
+    document.querySelector('.navbar').classList.toggle('active');
+  });
 
-  // ===== CARGA + SEED =====
-  let juegos = JSON.parse(localStorage.getItem("juegos_sega"));
-
-  if (!juegos || juegos.length === 0) {
-      juegos = games.map(juego => ({
-          ...juego,
-          id: juego.id || (Date.now().toString() + Math.random().toString(16).slice(2))
-      }));
-      localStorage.setItem("juegos_sega", JSON.stringify(juegos));
-  }
-
-
-
-
-
-        const form = document.getElementById("form-juego");
-        const lista = document.getElementById("lista-juegos-admin");
-
-        function guardar() {
-            localStorage.setItem("juegos_sega", JSON.stringify(juegos));
-            render();
-        }
-
-        function render() {
-            lista.innerHTML = "";
-            juegos.forEach(juego => {
-                lista.innerHTML += `
-                    <tr>
-                        <td><img src="${basePath + juego.image}" width="50" 
-                          onerror="this.onerror=null;this.src='../IMGS/juegos/SINIMGS.png'">
-                          </td>
-                        <td>${juego.title}</td>
-                        <td>${juego.year}</td>
-                        <td>
-                            <button class="btn-edit" onclick="prepararEdicion('${juego.id}')">Editar</button>
-                            <button class="btn-del" onclick="eliminarJuego('${juego.id}')">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        form.onsubmit = (e) => {
-            e.preventDefault();
-            const id = document.getElementById("edit-id").value || Date.now().toString();
-            const nuevoJuego = {
-                id: id,
-                title: document.getElementById("title").value,
-                genre: document.getElementById("genre").value,
-                year: Number(document.getElementById("year").value),
-                image: document.getElementById("image").value.trim() || "../IMGS/juegos/SINIMGS.png", // <-- FIX
-                description: document.getElementById("description").value,
-
-
-                trailer: document.getElementById("trailer").value,
-                sinopsis: document.getElementById("sinopsis").value,
-                images: document.getElementById("images").value
-                    .split(",")
-                    .map(img => img.trim())
-                    .filter(img => img !== ""),
-
-                comprar: (() => {
-                    try {
-                        return JSON.parse(document.getElementById("comprar").value || "[]");
-                    } catch {
-                        alert("Error en el formato JSON de Tiendas");
-                        return [];
-                    }
-                })()
-            };
-
-            const index = juegos.findIndex(j => j.id === id);
-            if (index !== -1) juegos[index] = nuevoJuego;
-            else juegos.push(nuevoJuego);
-
-            guardar();
-            form.reset();
-            document.getElementById("edit-id").value = "";
-            document.getElementById("btn-submit").innerText = "Agregar Juego";
-        };
-
-
-        window.eliminarJuego = (id) => {
-            juegos = juegos.filter(j => j.id !== id);
-            guardar();
-        };
-
-        window.prepararEdicion = (id) => {
-            const juego = juegos.find(j => j.id === id);
-            document.getElementById("edit-id").value = juego.id;
-            document.getElementById("title").value = juego.title;
-            document.getElementById("genre").value = juego.genre;
-            document.getElementById("year").value = juego.year;
-            document.getElementById("image").value = juego.image;
-            document.getElementById("description").value = juego.description;
-            document.getElementById("btn-submit").innerText = "Actualizar Juego";
-            document.getElementById("trailer").value = juego.trailer || "";
-            document.getElementById("sinopsis").value = juego.sinopsis || "";
-            document.getElementById("images").value = (juego.images || []).join(", ");
-            document.getElementById("comprar").value = JSON.stringify(juego.comprar || [], null, 2);
-
-        };
-
-        render();
-    </script>
-  <script>
-    // Menu hamburguesa
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navbar = document.querySelector('.navbar');
-    menuToggle.addEventListener('click', () => {
-      navbar.classList.toggle('active');
-    });
-  </script>
-<script>
-  // Verificamos si hay usuario logueado y si es admin
+// ================= AUTENTICACIÓN =================
 const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
 if (!loggedUser) {
@@ -251,56 +116,204 @@ if (!loggedUser) {
     window.location.href = "../AVANCPROYECTO/login.html";
 }
 
-if (loggedUser.role === "user") {
+if (loggedUser.role !== "admin") {
     alert("No tienes permisos para entrar aquí");
     window.location.href = "../index.html";
 }
 
+const loginBtn = document.getElementById("login-btn");
+const dropdown = document.getElementById("user-dropdown");
+const logoutBtn = document.getElementById("logout-btn");
+const switchBtn = document.getElementById("switch-btn");
 
+loginBtn.textContent = loggedUser.username;
 
-  /* ===== Botón sesión ===== */
-  const loginBtn = document.getElementById("login-btn");
-  const dropdown = document.getElementById("user-dropdown");
-  const logoutBtn = document.getElementById("logout-btn");
-  const switchBtn = document.getElementById("switch-btn");
+loginBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle("hidden");
+});
 
-  /* ===== ESTADO SIN USUARIO ===== */
-  if (!loggedUser) {
-      loginBtn.textContent = "Iniciar sesión";
-      loginBtn.addEventListener("click", () => {
-          window.location.href = "login.html";
-      });
-  } 
-  /* ===== ESTADO CON USUARIO ===== */
-  else {
-      loginBtn.textContent = loggedUser.username;
+logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("loggedUser");
+    window.location.href = "../AVANCPROYECTO/login.html";
+});
 
-      loginBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          dropdown.classList.toggle("hidden");
-      });
+switchBtn.addEventListener("click", () => {
+    localStorage.removeItem("loggedUser");
+    window.location.href = "../AVANCPROYECTO/login.html";
+});
 
-      // Cerrar sesión → redirige si ya no es admin
-      logoutBtn.addEventListener("click", () => {
-          localStorage.removeItem("loggedUser");
-          dropdown.classList.add("hidden");
-          loginBtn.textContent = "Iniciar sesión";
+document.addEventListener("click", () => {
+    dropdown.classList.add("hidden");
+});
 
-          // Redirigimos al login automáticamente
-          window.location.href = "login.html";
-      });
+// ================= API =================
+const API_URL = "http://localhost:3000/api/games";
 
-      // Cambiar usuario → redirige a login
-      switchBtn.addEventListener("click", () => {
-          localStorage.removeItem("loggedUser");
-          window.location.href = "login.html";
-      });
-  }
+const form = document.getElementById("form-juego");
+const lista = document.getElementById("lista-juegos-admin");
+const btnSubmit = document.getElementById("btn-submit");
+const btnCancelar = document.getElementById("btn-cancelar");
 
-  // Click fuera cierra menú
-  document.addEventListener("click", () => {
-      dropdown.classList.add("hidden");
-  });
+// Helper seguro
+async function fetchSeguro(url, options = {}) {
+    const res = await fetch(url, options);
+
+    if (res.status === 401) {
+        alert("Sesión expirada");
+        localStorage.removeItem("loggedUser");
+        window.location.href = "../AVANCPROYECTO/login.html";
+        return null;
+    }
+
+    if (!res.ok) {
+        const error = await res.text();
+        throw new Error(error);
+    }
+
+    return res.json();
+}
+
+// ================= CARGAR JUEGOS =================
+async function cargarJuegos() {
+    try {
+        const data = await fetchSeguro(API_URL);
+        if (!data) return;
+
+        lista.innerHTML = "";
+
+        data.results.forEach(juego => {
+            lista.innerHTML += `
+                <tr>
+                    <td><img src="${juego.image}" width="50"></td>
+                    <td>${juego.title}</td>
+                    <td>${juego.year}</td>
+                    <td>
+                        <button onclick="editarJuego('${juego._id}')">Editar</button>
+                        <button onclick="eliminarJuego('${juego._id}')">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+    } catch (err) {
+        alert("Error cargando juegos");
+    }
+}
+
+// ================= CREAR / EDITAR =================
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById("edit-id").value;
+
+    let comprarData = [];
+    try {
+        comprarData = JSON.parse(document.getElementById("comprar").value || "[]");
+    } catch {
+        alert("JSON inválido en Tiendas");
+        return;
+    }
+
+    const nuevoJuego = {
+        title: document.getElementById("title").value.trim(),
+        genre: document.getElementById("genre").value.trim(),
+        year: Number(document.getElementById("year").value),
+        image: document.getElementById("image").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        trailer: document.getElementById("trailer").value.trim(),
+        sinopsis: document.getElementById("sinopsis").value.trim(),
+        images: document.getElementById("images").value
+            .split(",")
+            .map(i => i.trim())
+            .filter(i => i !== ""),
+        comprar: comprarData
+    };
+
+    try {
+        await fetchSeguro(
+            id ? `${API_URL}/${id}` : API_URL,
+            {
+                method: id ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${loggedUser.token}`
+                },
+                body: JSON.stringify(nuevoJuego)
+            }
+        );
+
+        alert(id ? "Juego actualizado" : "Juego agregado");
+
+        form.reset();
+        document.getElementById("edit-id").value = "";
+        btnSubmit.innerText = "Agregar Juego";
+        btnCancelar.style.display = "none";
+
+        cargarJuegos();
+
+    } catch (err) {
+        alert("Error guardando juego");
+    }
+});
+
+// ================= EDITAR =================
+window.editarJuego = async (id) => {
+    try {
+        const data = await fetchSeguro(`${API_URL}/${id}`);
+        if (!data) return;
+
+        const juego = data.data;
+
+        document.getElementById("edit-id").value = juego._id;
+        document.getElementById("title").value = juego.title;
+        document.getElementById("genre").value = juego.genre;
+        document.getElementById("year").value = juego.year;
+        document.getElementById("image").value = juego.image;
+        document.getElementById("description").value = juego.description || "";
+        document.getElementById("trailer").value = juego.trailer || "";
+        document.getElementById("sinopsis").value = juego.sinopsis || "";
+        document.getElementById("images").value = (juego.images || []).join(", ");
+        document.getElementById("comprar").value =
+            JSON.stringify(juego.comprar || [], null, 2);
+
+        btnSubmit.innerText = "Actualizar Juego";
+        btnCancelar.style.display = "inline-block";
+
+    } catch {
+        alert("Error cargando juego");
+    }
+};
+
+// ================= CANCELAR =================
+btnCancelar.addEventListener("click", () => {
+    form.reset();
+    document.getElementById("edit-id").value = "";
+    btnSubmit.innerText = "Agregar Juego";
+    btnCancelar.style.display = "none";
+});
+
+// ================= ELIMINAR =================
+window.eliminarJuego = async (id) => {
+    if (!confirm("¿Eliminar juego?")) return;
+
+    try {
+        await fetchSeguro(`${API_URL}/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${loggedUser.token}`
+            }
+        });
+
+        alert("Juego eliminado");
+        cargarJuegos();
+
+    } catch {
+        alert("Error eliminando juego");
+    }
+};
+
+cargarJuegos();
 </script>
 
 </body>

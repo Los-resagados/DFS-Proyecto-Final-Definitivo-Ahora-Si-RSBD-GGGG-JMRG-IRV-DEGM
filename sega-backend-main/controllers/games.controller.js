@@ -11,8 +11,11 @@ exports.getGames = async (req, res, next) => {
 
     let filter = {}
 
-    if (req.query.name) {
-      filter.name = { $regex: req.query.name, $options: "i" }
+    if (req.query.title) {
+      filter.title = { $regex: req.query.title, $options: "i" }
+    }
+    if (req.query.genre) {
+      filter.genre = req.query.genre
     }
 
     if (req.query.category) {

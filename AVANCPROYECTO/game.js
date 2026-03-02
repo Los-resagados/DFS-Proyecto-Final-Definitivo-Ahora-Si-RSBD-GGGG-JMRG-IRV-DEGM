@@ -24,7 +24,8 @@ async function loadGame() {
       throw new Error("No encontrado");
     }
 
-    const game = await response.json();
+    const data = await response.json();
+    const game = data.data;
 
     titleEl.textContent = game.title;
     genreEl.textContent = game.genre || "-";
