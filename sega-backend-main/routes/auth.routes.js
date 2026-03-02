@@ -46,4 +46,18 @@ router.get("/google/callback",
   }
 );
 
+
+/** * RUTAS DE MICROSOFT OAUTH
+ */
+router.get("/microsoft",
+  passport.authenticate("microsoft", { scope: ["user.read"] })
+);
+
+router.get("/microsoft/callback",
+  passport.authenticate("microsoft", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
+
 module.exports = router;

@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const MicrosoftStrategy = require("passport-microsoft").Strategy;
 const session = require("express-session");
 
 const app = express();
@@ -30,6 +31,16 @@ if (!process.env.GOOGLE_CLIENT_ID) {
 
 if (!process.env.GOOGLE_CLIENT_SECRET) {
   console.error("❌ Falta GOOGLE_CLIENT_SECRET en el .env");
+  process.exit(1);
+}
+
+if (!process.env.MICROSOFT_CLIENT_ID) {
+  console.error("❌ Falta MICROSOFT_CLIENT_ID en el .env");
+  process.exit(1);
+}
+
+if (!process.env.MICROSOFT_CLIENT_SECRET) {
+  console.error("❌ Falta MICROSOFT_CLIENT_SECRET en el .env");
   process.exit(1);
 }
 
@@ -94,6 +105,39 @@ passport.use(
 );
 
 // ===============================
+// ✅ CONFIGURACIÓN MICROSOFT
+// ===============================
+passport.use(
+  new MicrosoftStrategy(
+    {
+      clientID: process.env.MICROSOFT_CLIENT_ID,
+      clientSecret: process.env.MICROSOFT_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/microsoft/callback",
+      scope: ["user.read"],
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const User = require("./models/User");
+
+        let user = await User.findOne({ microsoftId: profile.id });
+
+        if (!user) {
+          user = await User.create({
+            username: profile.displayName,
+            microsoftId: profile.id,
+            email: profile.emails[0].value,
+          });
+        }
+
+        return done(null, user);
+      } catch (error) {
+        return done(error, null);
+      }
+    }
+  )
+);
+
+// ===============================
 // ✅ SERIALIZE / DESERIALIZE
 // ===============================
 passport.serializeUser((user, done) => {
@@ -132,6 +176,20 @@ app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
     res.redirect("http://localhost:5173"); // tu frontend
+  }
+);
+
+// ===============================
+// ✅ RUTAS MICROSOFT AUTH
+// ===============================
+app.get("/auth/microsoft",
+  passport.authenticate("microsoft", { scope: ["user.read"] })
+);
+
+app.get("/auth/microsoft/callback",
+  passport.authenticate("microsoft", { failureRedirect: "/" }),
+  (req, res) => {
+    res.redirect("http://localhost:5173");
   }
 );
 

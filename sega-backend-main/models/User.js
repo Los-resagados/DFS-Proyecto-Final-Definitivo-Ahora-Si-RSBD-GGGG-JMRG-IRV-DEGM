@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
     sparse: true, // permite que sea null
   },
 
+  microsoftId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+
   role: {
     type: String,
     enum: ["admin", "user"],
