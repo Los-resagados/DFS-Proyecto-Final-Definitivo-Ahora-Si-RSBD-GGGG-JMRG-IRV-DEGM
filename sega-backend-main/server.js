@@ -1,21 +1,38 @@
 require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
-app.use(cors({
-  origin: "https://zoological-bravery-production-5376.up.railway.app",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-app.options("*", cors());
+const cors = require("cors");
 const passport = require('passport');
 const session = require('express-session');
 
 const app = express();
 
 // ===============================
-// ✅ Verificar variables críticas ANTES de iniciar
+// ✅ CORS
+// ===============================
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "https://zoological-bravery-production-5376.up.railway.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+app.options("*", cors()); // Pre-flight requests
+
+// ===============================
+// ✅ Middlewares básicos
+// ===============================
+app.use(express.json());
+app.use("/images", express.static("public/images"));
+
+// Session + Passport
+app.use(session({ secret: process.env.SESSION_SECRET || 'keyboardcat', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+require('./config/passport')(passport);
+
+// ===============================
+// ✅ Variables críticas
 // ===============================
 if (!process.env.MONGO_URI) {
   console.error("❌ Falta MONGO_URI en el .env");
@@ -28,29 +45,26 @@ if (!process.env.JWT_SECRET) {
 }
 
 // ===============================
-// ✅ Middlewares básicos
-// ===============================
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', credentials: true }));
-app.use(express.json());
-app.use("/images", express.static("public/images"));
-
-// Session + Passport
-app.use(session({ secret: process.env.SESSION_SECRET || 'keyboardcat', resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
-require('./config/passport')(passport);
-
-// ===============================
-// ✅ Ruta raíz
+// ✅ Rutas
 // ===============================
 app.get("/", (req, res) => {
   res.json({ success: true, message: "API Sega backend corriendo 🚀" });
 });
 
-// Health check
 app.get("/api/health", (req, res) => {
   res.json({ success: true, status: "ok" });
 });
+
+app.use("/api/games", require("./routes/games.routes"));
+app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/tareas", require("./routes/tareas.routes"));
+app.use("/api/external", require("./routes/external.routes"));
+
+// ===============================
+// ✅ Middleware de errores
+// ===============================
+const errorMiddleware = require("./middlewares/errorMiddleware");
+app.use(errorMiddleware);
 
 // ===============================
 // ✅ Conexión a MongoDB
@@ -62,22 +76,6 @@ mongoose
     console.error("❌ Error MongoDB:", err);
     process.exit(1);
   });
-
-// ===============================
-// ✅ RUTAS PRINCIPALES
-// ===============================
-app.use("/api/games", require("./routes/games.routes"));
-app.use("/api/auth", require("./routes/auth.routes"));
-app.use("/api/tareas", require("./routes/tareas.routes"));
-
-// 🔥 API EXTERNA (Noticias + RAWG + Pokémon)
-app.use("/api/external", require("./routes/external.routes"));
-
-// ===============================
-// ✅ Middleware de errores
-// ===============================
-const errorMiddleware = require("./middlewares/errorMiddleware");
-app.use(errorMiddleware);
 
 // ===============================
 // ✅ Servidor
