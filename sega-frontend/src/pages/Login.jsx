@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
+import "../styles/paginas.css";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -21,22 +22,61 @@ function Login() {
     }
   };
 
+  const handleOAuth = (provider) => {
+    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/auth/${provider}`;
+  };
+
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          placeholder="Usuario"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Ingresar</button>
-      </form>
+    <div className="sonic-login">
+      <div className="login-container">
+        <div className="sega-title">SEGA</div>
+        <div className="sonic-subtitle">Inicia sesión para continuar</div>
+
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <label>USUARIO</label>
+            <input
+              type="text"
+              placeholder="Ingresa tu usuario"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>CONTRASEÑA</label>
+            <input
+              type="password"
+              placeholder="Ingresa tu contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="start-btn">INGRESAR</button>
+        </form>
+
+        <div style={{ margin: "20px 0", textAlign: "center", opacity: 0.7 }}>O</div>
+
+        <div style={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+          <button 
+            onClick={() => handleOAuth('google')} 
+            className="start-btn" 
+            style={{ background: "linear-gradient(135deg, #db4437, #ea4335)", marginBottom: 0 }}
+          >
+            🔴 GOOGLE
+          </button>
+          <button 
+            onClick={() => handleOAuth('microsoft')} 
+            className="start-btn" 
+            style={{ background: "linear-gradient(135deg, #2F2F2F, #1F1F1F)", marginBottom: 0 }}
+          >
+            ◻ MICROSOFT
+          </button>
+        </div>
+
+        <div className="footer">© 2026 SEGA Gaming Platform</div>
+      </div>
     </div>
   );
 }

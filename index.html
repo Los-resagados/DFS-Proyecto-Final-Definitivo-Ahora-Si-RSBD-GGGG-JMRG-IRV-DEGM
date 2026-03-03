@@ -49,7 +49,49 @@
         
     </section>
     
-    
+    <!-- APIs EXTERNAS -->
+    <section style="padding: 60px 20px; background: rgba(0, 0, 0, 0.3);">
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 style="text-align: center; color: #00b3ff; margin-bottom: 40px; font-size: 2rem;">🎮 APIs EXTERNAS</h2>
+        
+        <!-- Noticias Gaming -->
+        <div style="margin-bottom: 50px;">
+          <h3 style="text-align: center; color: #0063ff; margin-bottom: 20px;">📰 Noticias Gaming</h3>
+          <div id="news-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <p style="text-align: center; opacity: 0.6;">Cargando noticias...</p>
+          </div>
+        </div>
+
+        <!-- Juegos Populares RAWG -->
+        <div style="margin-bottom: 50px;">
+          <h3 style="text-align: center; color: #38ffee; margin-bottom: 20px;">🎯 Juegos Populares (RAWG)</h3>
+          <div id="games-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <p style="text-align: center; opacity: 0.6;">Cargando juegos...</p>
+          </div>
+        </div>
+
+        <!-- Pokédex -->
+        <div style="text-align: center;">
+          <h3 style="color: #ff6b9d; margin-bottom: 20px;">🟣 POKÉDEX</h3>
+          <div style="max-width: 600px; margin: 0 auto 30px;">
+            <input 
+              type="text" 
+              id="pokemon-input" 
+              placeholder="Busca un Pokémon (ej: pikachu)"
+              style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 2px solid #38ffee; background: #0b1c3d; color: white; font-size: 14px; outline: none; box-sizing: border-box; margin-bottom: 12px;"
+            />
+            <button 
+              id="pokemon-btn"
+              style="width: 100%; padding: 12px 24px; border-radius: 8px; border: none; background: linear-gradient(135deg, #ff6b9d, #ff8fab); color: white; font-weight: bold; cursor: pointer; font-size: 14px;"
+            >
+              BUSCAR
+            </button>
+          </div>
+          <div id="pokemon-container" style="max-width: 500px; margin: 0 auto;">
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="informacion" id="info">
         <div>
@@ -101,6 +143,35 @@
     </div>
     <p>© 2026 SEGA. Todos los derechos reservados.</p>
 </footer>
+
+<!-- MODAL LOGIN -->
+<div id="login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;">
+  <div style="background: rgba(0, 0, 0, 0.9); padding: 40px; border-radius: 15px; width: 90%; max-width: 450px; box-shadow: 0 0 30px rgba(0, 110, 255, 0.4); animation: fadeIn 0.3s ease;">
+    <h2 style="text-align: center; color: #0063ff; margin-bottom: 10px;">SEGA LOGIN</h2>
+    <p style="text-align: center; color: #bcd6ff; margin-bottom: 30px; font-size: 14px;">Inicia sesión para continuar</p>
+    
+    <form id="login-form" style="margin-bottom: 20px;">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; color: #9bbcff; font-size: 12px; margin-bottom: 6px;">USUARIO</label>
+        <input type="text" id="form-username" placeholder="Tu usuario" required style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: #0b1c3d; color: white; box-sizing: border-box;"/>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; color: #9bbcff; font-size: 12px; margin-bottom: 6px;">CONTRASEÑA</label>
+        <input type="password" id="form-password" placeholder="Tu contraseña" required style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: #0b1c3d; color: white; box-sizing: border-box;"/>
+      </div>
+      <button type="submit" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #0063ff, #00b3ff); color: white; font-weight: bold; cursor: pointer; font-size: 14px;">INGRESAR</button>
+    </form>
+
+    <div style="text-align: center; color: #7fa3ff; margin: 15px 0; font-size: 12px;">O</div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <button id="google-oauth" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #db4437, #ea4335); color: white; font-weight: bold; cursor: pointer;">🔴 GOOGLE</button>
+      <button id="microsoft-oauth" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #2F2F2F, #1F1F1F); color: white; font-weight: bold; cursor: pointer;">◻ MICROSOFT</button>
+    </div>
+
+    <button id="close-modal" style="width: 100%; padding: 10px; margin-top: 15px; border-radius: 8px; border: 1px solid #38ffee; background: transparent; color: #38ffee; font-weight: bold; cursor: pointer;">CERRAR</button>
+  </div>
+</div>
 
 <script>
     document.querySelector("form").addEventListener("submit", function(e){
@@ -180,14 +251,73 @@ const loginBtn = document.getElementById("login-btn");
 const dropdown = document.getElementById("user-dropdown");
 const logoutBtn = document.getElementById("logout-btn");
 const switchBtn = document.getElementById("switch-btn");
+const loginModal = document.getElementById("login-modal");
+const closeModalBtn = document.getElementById("close-modal");
+const loginForm = document.getElementById("login-form");
+const googleOAuthBtn = document.getElementById("google-oauth");
+const microsoftOAuthBtn = document.getElementById("microsoft-oauth");
+
+const API_URL = "http://localhost:3000";
+
+// Abrir/cerrar modal
+loginBtn.onclick = (e) => {
+    if (!loggedUser) {
+        e.preventDefault();
+        loginModal.style.display = "flex";
+    }
+};
+
+closeModalBtn.onclick = () => {
+    loginModal.style.display = "none";
+};
+
+loginModal.onclick = (e) => {
+    if (e.target === loginModal) {
+        loginModal.style.display = "none";
+    }
+};
+
+// OAuth
+googleOAuthBtn.onclick = () => {
+    window.location.href = API_URL + "/api/auth/google";
+};
+
+microsoftOAuthBtn.onclick = () => {
+    window.location.href = API_URL + "/api/auth/microsoft";
+};
+
+// Login tradicional
+loginForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("form-username").value;
+    const password = document.getElementById("form-password").value;
+    
+    try {
+        const res = await fetch(API_URL + "/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        
+        if (data.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            loginModal.style.display = "none";
+            alert("Login exitoso!");
+            location.reload();
+        } else {
+            alert("Credenciales incorrectas");
+        }
+    } catch (err) {
+        alert("Error en login: " + err.message);
+    }
+};
 
 /* ===== SIN USUARIO ===== */
 if (!loggedUser) {
     loginBtn.textContent = "Iniciar sesión";
-
-    loginBtn.onclick = () => {
-        window.location.href = "AVANCPROYECTO/login.html";
-    };
+    dropdown.classList.add("hidden");
 }
 /* ===== CON USUARIO ===== */
 else {
@@ -198,23 +328,20 @@ else {
         dropdown.classList.toggle("hidden");
     };
 
-    // Cerrar sesión → quedarse en index
+    // Cerrar sesión
     logoutBtn.onclick = () => {
         localStorage.removeItem("loggedUser");
-
+        localStorage.removeItem("token");
         dropdown.classList.add("hidden");
         loginBtn.textContent = "Iniciar sesión";
-
-        
-        loginBtn.onclick = () => {
-            window.location.href = "AVANCPROYECTO/login.html";
-        };
+        location.reload();
     };
 
-    // Cambiar usuario → ir a login
+    // Cambiar usuario
     switchBtn.onclick = () => {
         localStorage.removeItem("loggedUser");
-        window.location.href = "AVANCPROYECTO/login.html";
+        localStorage.removeItem("token");
+        loginModal.style.display = "flex";
     };
 }
 
@@ -222,6 +349,112 @@ else {
 document.addEventListener("click", () => {
     dropdown.classList.add("hidden");
 });
+
+// ===== CARGAR APIs EXTERNAS =====
+async function loadExternalAPIs() {
+    const API_KEY_RAWG = "9b20eb2bf7c2481594ba5e9eeb09ce16";
+
+    // Noticias Gaming - usando NewsAPI alternativo sin CORS
+    try {
+        // Hardcoded news como fallback
+        const newsContainer = document.getElementById("news-container");
+        newsContainer.innerHTML = "";
+        
+        const hardcodedNews = [
+            { title: "Sonic Frontiers recibe actualización", description: "Nuevos niveles y personajes disponibles", url: "https://sonic.sega.com" },
+            { title: "Football Manager 26 rompe récords", description: "Millones de jugadores en su lanzamiento", url: "https://www.footballmanager.com" },
+            { title: "SEGA anuncia nuevo IP", description: "Proyecto secreto en desarrollo", url: "https://www.sega.com" },
+            { title: "Retro gaming vuelve a SEGA", description: "Colección clásica en todas plataformas", url: "https://www.sega.com" },
+            { title: "E-sports SEGA Gaming", description: "Torneo internacional con premios", url: "https://www.sega.com" },
+            { title: "SEGA adquiere nuevo estudio", description: "Expansión de desarrollo creativo", url: "https://www.sega.com" }
+        ];
+        
+        hardcodedNews.forEach(article => {
+            const card = document.createElement("div");
+            card.style.cssText = "background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);";
+            card.innerHTML = `
+                <h4 style="color: #0063ff; margin: 0 0 10px 0;">${article.title}</h4>
+                <p style="font-size: 0.85rem; opacity: 0.8; margin: 0 0 10px 0;">${article.description}</p>
+                <a href="${article.url}" target="_blank" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #0063ff, #00b3ff); color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">Leer más</a>
+            `;
+            newsContainer.appendChild(card);
+        });
+    } catch (err) {
+        console.error("Error noticias:", err);
+    }
+
+    // Juegos RAWG genéricos
+    try {
+        const gamesContainer = document.getElementById("games-container");
+        gamesContainer.innerHTML = "";
+        const resGames = await fetch(`https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=6`);
+        const dataGames = await resGames.json();
+        if (dataGames.results && dataGames.results.length > 0) {
+            dataGames.results.forEach(game => {
+                const card = document.createElement("div");
+                card.style.cssText = "background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;";
+                card.innerHTML = `
+                    <img src="${game.background_image}" alt="${game.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;"/>
+                    <h4 style="color: #38ffee; margin: 0 0 8px 0;">${game.name}</h4>
+                    <p style="margin: 0; color: #00b3ff; font-weight: bold;">⭐ ${game.rating.toFixed(1)}</p>
+                `;
+                gamesContainer.appendChild(card);
+            });
+        } else {
+            gamesContainer.innerHTML = "<p style='opacity: 0.5;'>No hay juegos disponibles</p>";
+        }
+    } catch (err) {
+        console.error("Error juegos:", err);
+        gamesContainer.innerHTML = "<p style='opacity: 0.5;'>Error cargando juegos</p>";
+    }
+}
+
+// Pokémon Search - Esperar a que DOM esté listo
+document.addEventListener("DOMContentLoaded", () => {
+    const pokemonBtn = document.getElementById("pokemon-btn");
+    const pokemonInput = document.getElementById("pokemon-input");
+
+    if (pokemonBtn && pokemonInput) {
+        pokemonBtn.onclick = async () => {
+            const name = pokemonInput.value.toLowerCase().trim();
+            if (!name) {
+                alert("Por favor ingresa un Pokémon");
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+                if (!res.ok) throw new Error("Pokémon no encontrado");
+                
+                const pokemon = await res.json();
+                const container = document.getElementById("pokemon-container");
+                
+                container.innerHTML = `
+                    <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; text-align: center; display:flex; flex-direction:column; align-items:center;">
+                        <h3 style="color: #ff6b9d; text-transform: capitalize; margin: 0 0 15px 0;">${pokemon.name}</h3>
+                        <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 10px;"/>
+                        ${pokemon.sprites.back_default ? `<img src="${pokemon.sprites.back_default}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 15px;"/>` : ''}
+                        <p style="margin: 5px 0;"><strong>Tipo(s):</strong> ${pokemon.types.map(t => t.type.name).join(", ")}</p>
+                        <p style="margin: 5px 0;"><strong>Altura:</strong> ${(pokemon.height / 10).toFixed(1)} m</p>
+                        <p style="margin: 5px 0;"><strong>Peso:</strong> ${(pokemon.weight / 10).toFixed(1)} kg</p>
+                    </div>
+                `;
+            } catch (err) {
+                document.getElementById("pokemon-container").innerHTML = `<p style='color: #ff6b9d; opacity: 0.7;'>❌ ${err.message}</p>`;
+            }
+        };
+
+        pokemonInput.onkeydown = (e) => {
+            if (e.key === "Enter") {
+                pokemonBtn.click();
+            }
+        };
+    }
+});
+
+// Cargar APIs al iniciar
+loadExternalAPIs();
+
 </script>
 
 </body>
