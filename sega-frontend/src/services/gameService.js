@@ -1,4 +1,7 @@
-const API = import.meta.env.VITE_API_URL + "/api/games"; 
+// src/services/gameService.js
+import { API_URL } from "./config";
+
+const API = API_URL + "/api/games"; // ahora usa la URL universal
 
 export const getGames = async () => {
   const token = localStorage.getItem("token");
