@@ -5,12 +5,15 @@ import EditorJuegos from "./pages/EditorJuegos";
 import GestorTareas from "./pages/GestorTareas";
 import ProtectedRoute from "./components/ProtectedRoute";
 import External from "./pages/External";
+import OauthCallback from "./pages/OauthCallback";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+
+        <Route path="/oauth/callback" element={<OauthCallback />} />
 
         <Route
           path="/dashboard"
