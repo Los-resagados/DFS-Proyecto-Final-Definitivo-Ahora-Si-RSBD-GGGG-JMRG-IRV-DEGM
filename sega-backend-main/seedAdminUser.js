@@ -16,10 +16,11 @@ async function seedUsers() {
     const usuarios = [
       { username: "eggman", password: "Sage2022", role: "admin" },
       { username: "neometalsonic", password: "metaloverlord", role: "admin" },
-      { username: "infinite", password: "rubifantasma", role: "user" },
-      { username: "sage", password: "aiassistant", role: "user" },
-      { username: "metalsonic", password: "metal", role: "user" },
-      { username: "Ricardo", password: "4321", role: "admin" }
+      { username: "Ricardo", password: "4321", role: "admin" },
+      { username: "infinite", password: "rubifantasma", role: "editor" },
+      { username: "metalsonic", password: "metal", role: "editor" },
+      { username: "sage", password: "aiassistant", role: "usuario" },
+      { username: "sonicfan", password: "sonicpass", role: "usuario" }
     ];
 
     // Encriptar contraseñas

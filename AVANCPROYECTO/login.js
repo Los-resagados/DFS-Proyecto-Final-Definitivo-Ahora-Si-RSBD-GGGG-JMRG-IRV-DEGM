@@ -36,10 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       alert("Inicio de sesión exitoso ⚡");
 
-      // Redirección
+      // Redirección basada en el rol
       if (data.role === "admin") {
         window.location.href = "editorjuegos.html";
+      } else if (data.role === "editor") {
+        window.location.href = "editorjuegos.html";
       } else {
+        // usuario
         window.location.href = "../index.html";
       }
 
