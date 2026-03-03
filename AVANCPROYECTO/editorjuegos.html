@@ -94,6 +94,8 @@
           </thead>
           <tbody id="lista-juegos-admin"></tbody>
       </table>
+
+      <div class="paginacion-admin" id="paginacion-admin"></div>
     </div>
 
   </div>
@@ -148,10 +150,16 @@ document.addEventListener("click", () => {
 });
 
 // ================= API =================
-const API_URL = "http://localhost:3000/api/games";
+const API_URL = "http://localhost:3000/api/games?all=true";
 
 const form = document.getElementById("form-juego");
 const lista = document.getElementById("lista-juegos-admin");
+const paginacion = document.getElementById("paginacion-admin");
+
+let juegosGlobal = [];
+let paginaActual = 1;
+const juegosPorPagina = 8;
+
 const btnSubmit = document.getElementById("btn-submit");
 const btnCancelar = document.getElementById("btn-cancelar");
 
@@ -180,9 +188,6 @@ async function cargarJuegos() {
         const res = await fetch(API_URL);
         const data = await res.json();
 
-        lista.innerHTML = "";
-
-        // Detecta automáticamente cómo viene la respuesta
         const juegos = data.results || data.data || data;
 
         if (!Array.isArray(juegos)) {
@@ -190,29 +195,62 @@ async function cargarJuegos() {
             return;
         }
 
-        juegos.forEach(juego => {
-            // Aquí se ajusta la ruta de la imagen
-            const imgSrc = juego.image
-                ? `../IMGS/juegos/${juego.image}` // Ruta relativa correcta
-                : "../IMGS/juegos/SINIMGS.png";   // Imagen por defecto
-
-            lista.innerHTML += `
-                <tr>
-                    <td><img src="${imgSrc}" width="50" alt="${juego.title}"></td>
-                    <td>${juego.title}</td>
-                    <td>${juego.year}</td>
-                    <td>
-                        <button onclick="editarJuego('${juego._id}')">Editar</button>
-                        <button onclick="eliminarJuego('${juego._id}')">Eliminar</button>
-                    </td>
-                </tr>
-            `;
-        });
+        juegosGlobal = juegos;
+        renderizarTabla();
 
     } catch (err) {
         console.error("Error cargando juegos:", err);
         alert("Error cargando juegos");
     }
+}
+
+function renderizarTabla() {
+    lista.innerHTML = "";
+
+    const inicio = (paginaActual - 1) * juegosPorPagina;
+    const fin = inicio + juegosPorPagina;
+
+    const juegosPagina = juegosGlobal.slice(inicio, fin);
+
+    juegosPagina.forEach(juego => {
+        const imgSrc = juego.image
+            ? `../IMGS/juegos/${juego.image}`
+            : "../IMGS/juegos/SINIMGS.png";
+
+        lista.innerHTML += `
+            <tr>
+                <td><img src="${imgSrc}" width="50" alt="${juego.title}"></td>
+                <td>${juego.title}</td>
+                <td>${juego.year}</td>
+                <td>
+                    <button class="btn-edit" onclick="editarJuego('${juego._id}')">Editar</button>
+                    <button class="btn-del" onclick="eliminarJuego('${juego._id}')">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    renderizarBotones();
+}
+
+function renderizarBotones() {
+    paginacion.innerHTML = "";
+
+    const totalPaginas = Math.ceil(juegosGlobal.length / juegosPorPagina);
+
+    console.log("Total juegos:", juegosGlobal.length);
+    console.log("Total paginas:", totalPaginas);
+
+    for (let i = 1; i <= totalPaginas; i++) {
+        paginacion.innerHTML += `
+            <button onclick="cambiarPagina(${i})">${i}</button>
+        `;
+    }
+}
+
+window.cambiarPagina = function(numero) {
+    paginaActual = numero;
+    renderizarTabla();
 }
 
 // ================= CREAR / EDITAR =================

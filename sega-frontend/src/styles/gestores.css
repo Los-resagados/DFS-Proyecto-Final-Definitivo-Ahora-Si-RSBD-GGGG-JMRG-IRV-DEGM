@@ -581,3 +581,28 @@ body.admin-body{
     font-size: 2.2rem;     /* título más grande */
     text-align: center;    /* centrado */
 }
+
+/* ===== FIX PAGINACIÓN ADMIN ===== */
+
+.paginacion-admin {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    gap: 6px;
+}
+
+.paginacion-admin button {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 6px;
+
+    border: 2px solid #38ffee;   /*  Borde celeste */
+    background-color: transparent; /* Interior transparente */
+    color: white;              /* Texto celeste */
+
+    cursor: pointer;
+    min-width: 30px;
+    transition: all 0.2s ease;
+}

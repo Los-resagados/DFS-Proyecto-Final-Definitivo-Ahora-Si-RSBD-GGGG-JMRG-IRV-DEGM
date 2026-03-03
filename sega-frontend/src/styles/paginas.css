@@ -257,3 +257,44 @@ body.sonic-login {
         padding: 18px;
     }
 }
+
+/* ================= PAGINACIÓN INDEX ================= */
+
+.paginacion {
+    margin-top: 25px;
+    display: flex;
+    flex-wrap: wrap;        /* Si no caben, bajan */
+    justify-content: center;
+    gap: 6px;
+}
+
+.paginacion button {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 6px;
+
+    border: 2px solid white;   /* 🔥 Borde blanco */
+    
+    background-color: rgb(25,11,130); /* Interior azul */
+    color: white;
+    cursor: pointer;
+    min-width: 30px;
+}
+
+.paginacion button:hover {
+    background-color: #003ea8;
+}
+
+/* ===== CENTRAR CONTENEDOR DE PAGINACIÓN ===== */
+
+section.juegos .paginacion {
+    grid-column: 1 / -1;   /*  Si juegos usa grid, ocupa toda la fila */
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    margin: 30px auto 0 auto;
+}
+
