@@ -1,4 +1,4 @@
-const API = "http://localhost:3000/api/games";
+const API = import.meta.env.VITE_API_URL + "/api/games"; 
 
 export const getGames = async () => {
   const token = localStorage.getItem("token");

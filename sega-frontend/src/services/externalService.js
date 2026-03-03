@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/api/external";
+const BASE_URL = import.meta.env.VITE_API_URL + "/api/external";
 
 export const getGamingNews = async () => {
   const response = await fetch(`${BASE_URL}/gaming-news`);
