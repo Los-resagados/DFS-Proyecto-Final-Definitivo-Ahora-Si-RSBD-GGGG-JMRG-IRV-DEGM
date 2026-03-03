@@ -10,14 +10,13 @@ const app = express();
 // ===============================
 // ✅ CORS
 // ===============================
+// Permite que tu frontend haga peticiones al backend
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://zoological-bravery-production-5376.up.railway.app",
+  origin: process.env.FRONTEND_URL || "http://localhost:5173", // URL del frontend
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
-
-app.options("*", cors()); // Pre-flight requests
 
 // ===============================
 // ✅ Middlewares básicos
@@ -26,7 +25,11 @@ app.use(express.json());
 app.use("/images", express.static("public/images"));
 
 // Session + Passport
-app.use(session({ secret: process.env.SESSION_SECRET || 'keyboardcat', resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'keyboardcat',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport')(passport);
@@ -81,7 +84,6 @@ mongoose
 // ✅ Servidor
 // ===============================
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
