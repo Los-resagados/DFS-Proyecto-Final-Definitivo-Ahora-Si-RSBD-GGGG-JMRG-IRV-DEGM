@@ -150,7 +150,7 @@ document.addEventListener("click", () => {
 });
 
 // ================= API =================
-const API_URL = "http://localhost:3000/api/games?all=true";
+const API_BASE = "http://localhost:3000/api/games";
 
 const form = document.getElementById("form-juego");
 const lista = document.getElementById("lista-juegos-admin");
@@ -185,7 +185,7 @@ async function fetchSeguro(url, options = {}) {
 // ================= CARGAR JUEGOS =================
 async function cargarJuegos() {
     try {
-        const res = await fetch(API_URL);
+        const res = await fetch(`${API_BASE}?all=true`);
         const data = await res.json();
 
         const juegos = data.results || data.data || data;
@@ -284,7 +284,7 @@ form.addEventListener("submit", async (e) => {
 
     try {
         await fetchSeguro(
-            id ? `${API_URL}/${id}` : API_URL,
+            id ? `${API_BASE}/${id}` : API_BASE,
             {
                 method: id ? "PUT" : "POST",
                 headers: {
@@ -312,7 +312,7 @@ form.addEventListener("submit", async (e) => {
 // ================= EDITAR =================
 window.editarJuego = async (id) => {
     try {
-        const data = await fetchSeguro(`${API_URL}/${id}`);
+        const data = await fetchSeguro(`${API_BASE}/${id}`);
         if (!data) return;
 
         const juego = data.data;
@@ -350,7 +350,7 @@ window.eliminarJuego = async (id) => {
     if (!confirm("¿Eliminar juego?")) return;
 
     try {
-        await fetchSeguro(`${API_URL}/${id}`, {
+        await fetchSeguro(`${API_BASE}/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${loggedUser.token}`
