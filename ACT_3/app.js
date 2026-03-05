@@ -119,17 +119,6 @@ async function cargarEditores() {
 
 cargarEditores();
 
-// Abrir/cerrar dropdown
-selectedDiv?.addEventListener("click", (e) => {
-    e.stopPropagation();
-    optionsList.style.display =
-        optionsList.style.display === "block" ? "none" : "block";
-});
-
-// Cerrar al hacer click fuera
-document.addEventListener("click", () => {
-    if (optionsList) optionsList.style.display = "none";
-});
     // Abrir/cerrar dropdown
     selectedDiv.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -141,7 +130,7 @@ document.addEventListener("click", () => {
         optionsList.style.display = "none";
     });
 
-    
+
 // ================= Render =================
 function render() {
     if (!lista) return;
