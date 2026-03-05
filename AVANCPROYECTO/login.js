@@ -60,8 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const googleBtn = document.getElementById("google-btn");
   if (googleBtn) {
     googleBtn.addEventListener("click", () => {
-      console.log("🔵 Iniciando OAuth Google...");
-      window.location.href = `${API_BASE}/api/auth/google`;
+      e.preventDefault();
+  console.log("🔵 OAuth Google en desarrollo");
+  alert("Este botón sigue en desarrollo, disculpa las molestias.");
     });
   }
 
@@ -69,8 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const microsoftBtn = document.getElementById("microsoft-btn");
   if (microsoftBtn) {
     microsoftBtn.addEventListener("click", () => {
-      console.log("⬜ Iniciando OAuth Microsoft...");
-      window.location.href = `${API_BASE}/api/auth/microsoft`;
+      e.preventDefault();
+  console.log("⬜ OAuth Microsoft en desarrollo");
+  alert("Este botón sigue en desarrollo, disculpa las molestias.");
     });
   }
 

@@ -23,7 +23,8 @@ function Login() {
   };
 
   const handleOAuth = (provider) => {
-    window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/auth/${provider}`;
+    // Bloqueado: No redirige a APIs externas
+    alert(`Inicio de sesión con ${provider} está bloqueado.`);
   };
 
   return (
