@@ -10,12 +10,11 @@ const app = express();
 // ===============================
 // ✅ CORS
 // ===============================
-// Permite que tu frontend haga peticiones al backend
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173", // URL del frontend
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  origin: process.env.FRONTEND_URL,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // ===============================
