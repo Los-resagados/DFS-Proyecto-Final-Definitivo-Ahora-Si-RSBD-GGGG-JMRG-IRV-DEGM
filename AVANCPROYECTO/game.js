@@ -1,4 +1,9 @@
-const API_URL = "http://localhost:3000/api/games";
+// Detecta si estamos en local o en Railway
+const BACKEND_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
+
+const API_URL = `${BACKEND_URL}/api/games`;
 
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");
