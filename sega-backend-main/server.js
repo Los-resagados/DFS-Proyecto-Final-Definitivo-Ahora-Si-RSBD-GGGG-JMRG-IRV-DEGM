@@ -8,14 +8,9 @@ const session = require('express-session');
 const app = express();
 
 // ===============================
-// ✅ CORS
+// ✅ CORS (modo prueba abierto)
 // ===============================
-
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(cors());
 
 // ===============================
 // ✅ Middlewares básicos
