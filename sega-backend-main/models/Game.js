@@ -37,7 +37,11 @@ const GameSchema = new mongoose.Schema({
       logo: String,
       link: String
     }
-  ]
+  ],
+  assignedEditors: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 });
 
 module.exports = mongoose.model('Game', GameSchema)

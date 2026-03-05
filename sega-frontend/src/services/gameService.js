@@ -51,3 +51,18 @@ export const updateGame = async (id, game) => {
     body: JSON.stringify(game),
   });
 };
+
+export const assignEditors = async (gameId, editorIds) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API}/${gameId}/assign`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ editorIds }),
+  });
+
+  return response.json();
+};

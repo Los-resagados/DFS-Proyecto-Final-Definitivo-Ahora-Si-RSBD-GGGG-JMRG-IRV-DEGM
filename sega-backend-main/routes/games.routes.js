@@ -39,6 +39,18 @@ router.put('/:id',
 
 router.delete('/:id', authMiddleware, allowedRoles('admin'), [param('id').isMongoId().withMessage('ID inválido')], validate, controller.deleteGame);
 
+// asignar editores a un juego (solo admin)
+router.put('/:id/assign',
+	authMiddleware,
+	allowedRoles('admin'),
+	[
+		param('id').isMongoId().withMessage('ID inválido'),
+		body('editorIds').isArray().withMessage('editorIds debe ser un array')
+	],
+	validate,
+	controller.assignEditors
+);
+
 // obtener un juego por ID (requiere autenticación)
 router.get('/:id', controller.getGameById);
 

@@ -27,7 +27,7 @@ function App() {
         <Route
           path="/editor"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute roles={["admin","editor"]}>
               <EditorJuegos />
             </ProtectedRoute>
           }
@@ -36,7 +36,7 @@ function App() {
         <Route
           path="/tareas"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute roles={["admin","editor"]}>
               <GestorTareas />
             </ProtectedRoute>
           }

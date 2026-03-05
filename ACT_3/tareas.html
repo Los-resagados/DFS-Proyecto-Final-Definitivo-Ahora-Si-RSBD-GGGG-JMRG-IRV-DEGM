@@ -108,7 +108,7 @@
         window.location.href = "../AVANCPROYECTO/login.html";
     }
 
-    if (currentUser.role === "user") {
+    if (currentUser.role === "usuario") {
         alert("No tienes permisos para entrar aquí");
         window.location.href = "../index.html";
     }
@@ -129,7 +129,7 @@
   }
 
   // usuarios normales NO pueden entrar
-  if (currentUser.role === "user") {
+  if (currentUser.role === "usuario") {
       alert("No tienes permisos para entrar aquí");
       window.location.href = "../index.html";
   }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -144,52 +145,25 @@
     <p>© 2026 SEGA. Todos los derechos reservados.</p>
 </footer>
 
-<!-- MODAL LOGIN -->
-<div id="login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;">
-  <div style="background: rgba(0, 0, 0, 0.9); padding: 40px; border-radius: 15px; width: 90%; max-width: 450px; box-shadow: 0 0 30px rgba(0, 110, 255, 0.4); animation: fadeIn 0.3s ease;">
-    <h2 style="text-align: center; color: #0063ff; margin-bottom: 10px;">SEGA LOGIN</h2>
-    <p style="text-align: center; color: #bcd6ff; margin-bottom: 30px; font-size: 14px;">Inicia sesión para continuar</p>
-    
-    <form id="login-form" style="margin-bottom: 20px;">
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; color: #9bbcff; font-size: 12px; margin-bottom: 6px;">USUARIO</label>
-        <input type="text" id="form-username" placeholder="Tu usuario" required style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: #0b1c3d; color: white; box-sizing: border-box;"/>
-      </div>
-      <div style="margin-bottom: 15px;">
-        <label style="display: block; color: #9bbcff; font-size: 12px; margin-bottom: 6px;">CONTRASEÑA</label>
-        <input type="password" id="form-password" placeholder="Tu contraseña" required style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: #0b1c3d; color: white; box-sizing: border-box;"/>
-      </div>
-      <button type="submit" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #0063ff, #00b3ff); color: white; font-weight: bold; cursor: pointer; font-size: 14px;">INGRESAR</button>
-    </form>
-
-    <div style="text-align: center; color: #7fa3ff; margin: 15px 0; font-size: 12px;">O</div>
-
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-      <button id="google-oauth" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #db4437, #ea4335); color: white; font-weight: bold; cursor: pointer;">🔴 GOOGLE</button>
-      <button id="microsoft-oauth" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: linear-gradient(135deg, #2F2F2F, #1F1F1F); color: white; font-weight: bold; cursor: pointer;">◻ MICROSOFT</button>
-    </div>
-
-    <button id="close-modal" style="width: 100%; padding: 10px; margin-top: 15px; border-radius: 8px; border: 1px solid #38ffee; background: transparent; color: #38ffee; font-weight: bold; cursor: pointer;">CERRAR</button>
-  </div>
-</div>
-
 <script>
-    document.querySelector("form").addEventListener("submit", function(e){
-        e.preventDefault();
-        alert("Gracias por tu mensaje, " + document.getElementById("nombre").value + "!");
-    });
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
 
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navbar = document.querySelector('.navbar');
-    menuToggle.addEventListener('click', () => {
-        navbar.classList.toggle('active');
-    });
+function getLoggedUser() {
+    try {
+        return JSON.parse(localStorage.getItem("loggedUser"));
+    } catch {
+        return null;
+    }
+}
 
-</script>
-<script>
-const API_BASE = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
-
-/* ===== CARGAR JUEGOS DESDE BACKEND ===== */
+function clearSession() {
+    localStorage.removeItem("loggedUser");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+}
 
 async function cargarJuegos(page = 1) {
     try {
@@ -199,206 +173,83 @@ async function cargarJuegos(page = 1) {
         const container = document.querySelector("section.juegos");
         if (!container) return;
 
-        // Mantiene el título
         container.innerHTML = "<h2>Proyectos Destacados</h2>";
 
-        data.results.forEach(juego => {
+        (data.results || []).forEach((juego) => {
             const article = document.createElement("article");
             article.className = "project";
-
             article.innerHTML = `
                 <h3>${juego.title}</h3>
                 <a href="AVANCPROYECTO/game.html?id=${juego._id}">
-                    <img src="${API_BASE}/images/juegos/${juego.image}">
-                    alt="${juego.title}"
-                    onerror="this.src='IMGS/juegos/SINIMGS.png'">
+                    <img src="${API_BASE}/images/juegos/${juego.image}" alt="${juego.title}" onerror="this.src='IMGS/juegos/SINIMGS.png'">
                 </a>
             `;
-
             container.appendChild(article);
         });
 
-        // ===== PAGINACIÓN VISUAL =====
         const pagDiv = document.createElement("div");
         pagDiv.className = "paginacion";
-
-        for (let i = 1; i <= data.totalPages; i++) {
+        for (let i = 1; i <= (data.totalPages || 1); i++) {
             const btn = document.createElement("button");
             btn.textContent = i;
             btn.onclick = () => cargarJuegos(i);
             pagDiv.appendChild(btn);
         }
-
         container.appendChild(pagDiv);
-
     } catch (error) {
         console.error("Error cargando juegos:", error);
     }
 }
 
-// Cargar al iniciar
-cargarJuegos();
-</script>
-<script>
-/* ===== Protección admin ===== */
-const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-const btnVolver = document.querySelector(".btn-volver");
-
-if (btnVolver && (!loggedUser || loggedUser.role === "user")) {
-    btnVolver.style.display = "none";
-}
-
-/* ===== Botón sesión ===== */
-const loginBtn = document.getElementById("login-btn");
-const dropdown = document.getElementById("user-dropdown");
-const logoutBtn = document.getElementById("logout-btn");
-const switchBtn = document.getElementById("switch-btn");
-const loginModal = document.getElementById("login-modal");
-const closeModalBtn = document.getElementById("close-modal");
-const loginForm = document.getElementById("login-form");
-const googleOAuthBtn = document.getElementById("google-oauth");
-const microsoftOAuthBtn = document.getElementById("microsoft-oauth");
-
-const API_URL = API_BASE;
-
-// Abrir/cerrar modal
-loginBtn.onclick = (e) => {
-    if (!loggedUser) {
-        e.preventDefault();
-        loginModal.style.display = "flex";
-    }
-};
-
-closeModalBtn.onclick = () => {
-    loginModal.style.display = "none";
-};
-
-loginModal.onclick = (e) => {
-    if (e.target === loginModal) {
-        loginModal.style.display = "none";
-    }
-};
-
-// OAuth
-googleOAuthBtn.onclick = () => {
-    window.location.href = API_URL + "/api/auth/google";
-};
-
-microsoftOAuthBtn.onclick = () => {
-    window.location.href = API_URL + "/api/auth/microsoft";
-};
-
-// Login tradicional
-loginForm.onsubmit = async (e) => {
-    e.preventDefault();
-    const username = document.getElementById("form-username").value;
-    const password = document.getElementById("form-password").value;
-    
+async function loadExternalAPIs() {
     try {
-        const res = await fetch(API_URL + "/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await res.json();
-        
-        if (data.token) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("role", data.role);
-            loginModal.style.display = "none";
-            alert("Login exitoso!");
-            location.reload();
+        const newsContainer = document.getElementById("news-container");
+        if (!newsContainer) return;
+        newsContainer.innerHTML = "<p style='text-align: center; opacity: 0.6;'>Cargando noticias...</p>";
+
+        const resNews = await fetch(`${API_BASE}/api/external/gaming-news`);
+        const news = await resNews.json();
+        newsContainer.innerHTML = "";
+
+        if (Array.isArray(news) && news.length > 0) {
+            news.forEach((article) => {
+                const card = document.createElement("div");
+                card.style.cssText = "background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);";
+                card.innerHTML = `
+                    <h4 style="color: #0063ff; margin: 0 0 10px 0;">${article.title || "Sin título"}</h4>
+                    <p style="font-size: 0.85rem; opacity: 0.8; margin: 0 0 10px 0;">${article.description || article.content || "Sin descripción"}</p>
+                    <a href="${article.url || article.link || "#"}" target="_blank" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #0063ff, #00b3ff); color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold;">Leer más</a>
+                `;
+                newsContainer.appendChild(card);
+            });
         } else {
-            alert("Credenciales incorrectas");
+            newsContainer.innerHTML = "<p style='opacity: 0.5;'>No hay noticias disponibles</p>";
         }
     } catch (err) {
-        alert("Error en login: " + err.message);
-    }
-};
-
-/* ===== SIN USUARIO ===== */
-if (!loggedUser) {
-    loginBtn.textContent = "Iniciar sesión";
-    dropdown.classList.add("hidden");
-}
-/* ===== CON USUARIO ===== */
-else {
-    loginBtn.textContent = loggedUser.username;
-
-    loginBtn.onclick = (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("hidden");
-    };
-
-    // Cerrar sesión
-    logoutBtn.onclick = () => {
-        localStorage.removeItem("loggedUser");
-        localStorage.removeItem("token");
-        dropdown.classList.add("hidden");
-        loginBtn.textContent = "Iniciar sesión";
-        location.reload();
-    };
-
-    // Cambiar usuario
-    switchBtn.onclick = () => {
-        localStorage.removeItem("loggedUser");
-        localStorage.removeItem("token");
-        loginModal.style.display = "flex";
-    };
-}
-
-// Click fuera cierra menú
-document.addEventListener("click", () => {
-    dropdown.classList.add("hidden");
-});
-
-// ===== CARGAR APIs EXTERNAS =====
-async function loadExternalAPIs() {
-    const API_KEY_RAWG = "9b20eb2bf7c2481594ba5e9eeb09ce16";
-
-    // Noticias Gaming - usando NewsAPI alternativo sin CORS
-    try {
-        // Hardcoded news como fallback
-        const newsContainer = document.getElementById("news-container");
-        newsContainer.innerHTML = "";
-        
-        const hardcodedNews = [
-            { title: "Sonic Frontiers recibe actualización", description: "Nuevos niveles y personajes disponibles", url: "https://sonic.sega.com" },
-            { title: "Football Manager 26 rompe récords", description: "Millones de jugadores en su lanzamiento", url: "https://www.footballmanager.com" },
-            { title: "SEGA anuncia nuevo IP", description: "Proyecto secreto en desarrollo", url: "https://www.sega.com" },
-            { title: "Retro gaming vuelve a SEGA", description: "Colección clásica en todas plataformas", url: "https://www.sega.com" },
-            { title: "E-sports SEGA Gaming", description: "Torneo internacional con premios", url: "https://www.sega.com" },
-            { title: "SEGA adquiere nuevo estudio", description: "Expansión de desarrollo creativo", url: "https://www.sega.com" }
-        ];
-        
-        hardcodedNews.forEach(article => {
-            const card = document.createElement("div");
-            card.style.cssText = "background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);";
-            card.innerHTML = `
-                <h4 style="color: #0063ff; margin: 0 0 10px 0;">${article.title}</h4>
-                <p style="font-size: 0.85rem; opacity: 0.8; margin: 0 0 10px 0;">${article.description}</p>
-                <a href="${article.url}" target="_blank" style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #0063ff, #00b3ff); color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; cursor: pointer;">Leer más</a>
-            `;
-            newsContainer.appendChild(card);
-        });
-    } catch (err) {
         console.error("Error noticias:", err);
+        const newsContainer = document.getElementById("news-container");
+        if (newsContainer) {
+            newsContainer.innerHTML = "<p style='opacity: 0.5;'>Error cargando noticias</p>";
+        }
     }
 
-    // Juegos RAWG genéricos
     try {
         const gamesContainer = document.getElementById("games-container");
+        if (!gamesContainer) return;
+        gamesContainer.innerHTML = "<p style='text-align: center; opacity: 0.6;'>Cargando juegos populares...</p>";
+
+        const resGames = await fetch(`${API_BASE}/api/external/popular-games`);
+        const games = await resGames.json();
         gamesContainer.innerHTML = "";
-        const resGames = await fetch(`https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=6`);
-        const dataGames = await resGames.json();
-        if (dataGames.results && dataGames.results.length > 0) {
-            dataGames.results.forEach(game => {
+
+        if (Array.isArray(games) && games.length > 0) {
+            games.forEach((game) => {
                 const card = document.createElement("div");
                 card.style.cssText = "background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center;";
                 card.innerHTML = `
-                    <img src="${game.background_image}" alt="${game.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;"/>
+                    <img src="${game.background_image || "https://via.placeholder.com/280x150"}" alt="${game.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;"/>
                     <h4 style="color: #38ffee; margin: 0 0 8px 0;">${game.name}</h4>
-                    <p style="margin: 0; color: #00b3ff; font-weight: bold;">⭐ ${game.rating.toFixed(1)}</p>
+                    <p style="margin: 0; color: #00b3ff; font-weight: bold;">⭐ ${(game.rating || 0).toFixed(1)}</p>
                 `;
                 gamesContainer.appendChild(card);
             });
@@ -407,15 +258,89 @@ async function loadExternalAPIs() {
         }
     } catch (err) {
         console.error("Error juegos:", err);
-        gamesContainer.innerHTML = "<p style='opacity: 0.5;'>Error cargando juegos</p>";
+        const gamesContainer = document.getElementById("games-container");
+        if (gamesContainer) {
+            gamesContainer.innerHTML = "<p style='opacity: 0.5;'>Error cargando juegos</p>";
+        }
     }
 }
 
-// Pokémon Search - Esperar a que DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
+    // Contacto form
+    const contactoForm = document.querySelector("section.contacto form");
+    if (contactoForm) {
+        contactoForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            alert("Gracias por tu mensaje, " + document.getElementById("nombre").value + "!");
+        });
+    }
+
+    // Menu hamburguesa
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navbar = document.querySelector(".navbar");
+    if (menuToggle && navbar) {
+        menuToggle.addEventListener("click", () => navbar.classList.toggle("active"));
+    }
+
+    // Botones sesión
+    const loginBtn = document.getElementById("login-btn");
+    const dropdown = document.getElementById("user-dropdown");
+    const logoutBtn = document.getElementById("logout-btn");
+    const switchBtn = document.getElementById("switch-btn");
+    const btnVolver = document.querySelector(".btn-volver");
+
+    let loggedUser = getLoggedUser();
+
+    // Ocultar botón admin si no es admin
+    if (btnVolver && (!loggedUser || loggedUser.role === "usuario")) {
+        btnVolver.style.display = "none";
+    }
+
+    // Si NO hay usuario logueado
+    if (!loggedUser) {
+        if (loginBtn) {
+            loginBtn.textContent = "Iniciar sesión";
+            loginBtn.onclick = () => {
+                window.location.href = "AVANCPROYECTO/login.html";
+            };
+        }
+        if (dropdown) {
+            dropdown.classList.add("hidden");
+        }
+    }
+    // Si HAY usuario logueado
+    else {
+        if (loginBtn) {
+            loginBtn.textContent = loggedUser.username;
+            loginBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (dropdown) dropdown.classList.toggle("hidden");
+            };
+        }
+
+        if (logoutBtn) {
+            logoutBtn.onclick = () => {
+                clearSession();
+                location.reload();
+            };
+        }
+
+        if (switchBtn) {
+            switchBtn.onclick = () => {
+                clearSession();
+                window.location.href = "AVANCPROYECTO/login.html";
+            };
+        }
+    }
+
+    // Cerrar dropdown al hacer click fuera
+    document.addEventListener("click", () => {
+        if (dropdown) dropdown.classList.add("hidden");
+    });
+
+    // Pokémon Search
     const pokemonBtn = document.getElementById("pokemon-btn");
     const pokemonInput = document.getElementById("pokemon-input");
-
     if (pokemonBtn && pokemonInput) {
         pokemonBtn.onclick = async () => {
             const name = pokemonInput.value.toLowerCase().trim();
@@ -424,39 +349,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            const container = document.getElementById("pokemon-container");
+            container.innerHTML = "<p style='text-align: center; opacity: 0.6;'>Buscando Pokémon...</p>";
+
             try {
-                const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+                const res = await fetch(`${API_BASE}/api/external/pokemon/${name}`);
                 if (!res.ok) throw new Error("Pokémon no encontrado");
-                
+
                 const pokemon = await res.json();
-                const container = document.getElementById("pokemon-container");
-                
                 container.innerHTML = `
                     <div style="background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; text-align: center; display:flex; flex-direction:column; align-items:center;">
                         <h3 style="color: #ff6b9d; text-transform: capitalize; margin: 0 0 15px 0;">${pokemon.name}</h3>
-                        <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 10px;"/>
-                        ${pokemon.sprites.back_default ? `<img src="${pokemon.sprites.back_default}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 15px;"/>` : ''}
-                        <p style="margin: 5px 0;"><strong>Tipo(s):</strong> ${pokemon.types.map(t => t.type.name).join(", ")}</p>
+                        <img src="${pokemon.sprites.front_default || ""}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 10px;"/>
+                        ${pokemon.sprites.back_default ? `<img src="${pokemon.sprites.back_default}" alt="${pokemon.name}" style="height: 180px; margin-bottom: 15px;"/>` : ""}
+                        <p style="margin: 5px 0;"><strong>Tipo(s):</strong> ${pokemon.types.map((t) => t.type.name).join(", ")}</p>
                         <p style="margin: 5px 0;"><strong>Altura:</strong> ${(pokemon.height / 10).toFixed(1)} m</p>
                         <p style="margin: 5px 0;"><strong>Peso:</strong> ${(pokemon.weight / 10).toFixed(1)} kg</p>
                     </div>
                 `;
             } catch (err) {
-                document.getElementById("pokemon-container").innerHTML = `<p style='color: #ff6b9d; opacity: 0.7;'>❌ ${err.message}</p>`;
+                container.innerHTML = `<p style='color: #ff6b9d; opacity: 0.7;'>❌ ${err.message}</p>`;
             }
         };
 
         pokemonInput.onkeydown = (e) => {
-            if (e.key === "Enter") {
-                pokemonBtn.click();
-            }
+            if (e.key === "Enter") pokemonBtn.click();
         };
     }
+
+    // Cargar datos al iniciar
+    cargarJuegos();
+    loadExternalAPIs();
 });
-
-// Cargar APIs al iniciar
-loadExternalAPIs();
-
 </script>
 
 </body>

@@ -56,6 +56,7 @@ app.use("/api/games", require("./routes/games.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/tareas", require("./routes/tareas.routes"));
 app.use("/api/external", require("./routes/external.routes"));
+app.use("/api/users", require("./routes/users.routes"));
 
 // ===============================
 // ✅ Middleware de errores

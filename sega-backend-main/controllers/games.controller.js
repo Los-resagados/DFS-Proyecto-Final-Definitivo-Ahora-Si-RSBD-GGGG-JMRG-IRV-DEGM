@@ -28,6 +28,7 @@ exports.getGames = async (req, res, next) => {
     // 👇 SI ES ADMIN Y QUIERE TODOS
     if (req.query.all === "true") {
       const games = await Game.find(filter)
+        .populate('assignedEditors', 'username email role')
 
       return res.status(200).json({
         success: true,
@@ -40,6 +41,7 @@ exports.getGames = async (req, res, next) => {
     const games = await Game.find(filter)
       .skip(skip)
       .limit(limit)
+      .populate('assignedEditors', 'username email role')
 
     res.status(200).json({
       success: true,
@@ -60,6 +62,7 @@ exports.getGames = async (req, res, next) => {
 exports.getGameById = async (req, res, next) => {
   try {
     const game = await Game.findById(req.params.id)
+      .populate('assignedEditors', 'username email role')
 
     if (!game)
       return res.status(404).json({
@@ -144,5 +147,36 @@ exports.deleteGame = async (req, res, next) => {
 
   } catch (err) {
     next(err)
+  }
+}
+
+// ===============================
+// ASIGNAR EDITORES
+// ===============================
+exports.assignEditors = async (req, res, next) => {
+  try {
+    const { editorIds } = req.body;
+    
+    const game = await Game.findByIdAndUpdate(
+      req.params.id,
+      { assignedEditors: editorIds },
+      { new: true }
+    ).populate('assignedEditors', 'username email role');
+
+    if (!game) {
+      return res.status(404).json({
+        success: false,
+        message: "Juego no encontrado"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Editores asignados correctamente",
+      data: game
+    });
+
+  } catch (err) {
+    next(err);
   }
 }

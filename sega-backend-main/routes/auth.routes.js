@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const controller = require('../controllers/auth.controller');
 const validate = require('../middlewares/validateMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
@@ -29,6 +30,18 @@ router.post(
   controller.register
 );
 
+// ===== Cambiar rol (solo admins) =====
+router.post(
+  '/update-role',
+  authMiddleware,
+  [
+    body('username').trim().notEmpty().withMessage('El nombre de usuario es requerido'),
+    body('newRole').trim().notEmpty().withMessage('El nuevo rol es requerido')
+  ],
+  validate,
+  controller.updateUserRole
+);
+
 // ===== OAuth Google =====
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -54,5 +67,9 @@ router.get(
     res.redirect(redirectUrl);
   }
 );
+
+router.get('/me', require('../middlewares/authMiddleware'), (req, res) => {
+  res.json({ username: req.user.username, role: req.user.role });
+});
 
 module.exports = router;

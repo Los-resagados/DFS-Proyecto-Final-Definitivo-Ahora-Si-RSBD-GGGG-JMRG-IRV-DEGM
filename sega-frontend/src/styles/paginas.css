@@ -298,3 +298,252 @@ section.juegos .paginacion {
     margin: 30px auto 0 auto;
 }
 
+/* ================= EDITOR DE JUEGOS ================= */
+.editor-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.editor-container h2 {
+    text-align: center;
+    color: #0063ff;
+    margin-bottom: 30px;
+}
+
+.create-game-form {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 20px rgba(0, 110, 255, 0.3);
+}
+
+.create-game-form h3 {
+    color: #00b3ff;
+    margin-bottom: 20px;
+}
+
+.create-game-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: none;
+    background: #0b1c3d;
+    color: white;
+    font-size: 14px;
+}
+
+.create-game-form button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0063ff, #00b3ff);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+}
+
+.create-game-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 140, 255, 0.7);
+}
+
+.games-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    background: rgba(0, 0, 0, 0.75);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 110, 255, 0.3);
+}
+
+.game-card h3 {
+    color: #00b3ff;
+    margin-bottom: 10px;
+}
+
+.game-card p {
+    color: #bcd6ff;
+    margin: 8px 0;
+}
+
+.game-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.assigned-editors {
+    background: rgba(0, 110, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.assigned-editors p {
+    color: #00b3ff;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.assigned-editors ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.assigned-editors li {
+    color: #bcd6ff;
+    padding: 5px 0;
+}
+
+.game-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.game-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #0063ff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.game-actions button:hover {
+    background: #00b3ff;
+    transform: translateY(-2px);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #0b1c3d;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(0, 110, 255, 0.5);
+}
+
+.modal-content h3 {
+    color: #00b3ff;
+    margin-bottom: 20px;
+}
+
+.editors-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 20px 0;
+}
+
+.editor-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 110, 255, 0.1);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.editor-checkbox:hover {
+    background: rgba(0, 110, 255, 0.2);
+}
+
+.editor-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.editor-checkbox span {
+    color: #bcd6ff;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-actions button:first-child {
+    background: linear-gradient(135deg, #0063ff, #00b3ff);
+    color: white;
+}
+
+.modal-actions button:first-child:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 140, 255, 0.7);
+}
+
+.modal-actions button:last-child {
+    background: #666;
+    color: white;
+}
+
+.modal-actions button:last-child:hover {
+    background: #888;
+}
+
+.modal-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .games-list {
+        grid-template-columns: 1fr;
+    }
+
+    .game-actions {
+        flex-direction: column;
+    }
+
+    .game-actions button {
+        width: 100%;
+    }
+}
+

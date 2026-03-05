@@ -118,7 +118,7 @@ if (!loggedUser) {
     window.location.href = "../AVANCPROYECTO/login.html";
 }
 
-if (loggedUser.role !== "admin") {
+if (loggedUser.role !== "admin" && loggedUser.role !== "editor") {
     alert("No tienes permisos para entrar aquí");
     window.location.href = "../index.html";
 }
@@ -151,6 +151,7 @@ document.addEventListener("click", () => {
 
 // ================= API =================
 const API_BASE = "http://localhost:3000/api/games";
+const authToken = (loggedUser && loggedUser.token) || localStorage.getItem("token");
 
 const form = document.getElementById("form-juego");
 const lista = document.getElementById("lista-juegos-admin");
@@ -289,7 +290,7 @@ form.addEventListener("submit", async (e) => {
                 method: id ? "PUT" : "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${loggedUser.token}`
+                    "Authorization": `Bearer ${authToken}`
                 },
                 body: JSON.stringify(nuevoJuego)
             }
@@ -353,7 +354,7 @@ window.eliminarJuego = async (id) => {
         await fetchSeguro(`${API_BASE}/${id}`, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${loggedUser.token}`
+                "Authorization": `Bearer ${authToken}`
             }
         });
 
