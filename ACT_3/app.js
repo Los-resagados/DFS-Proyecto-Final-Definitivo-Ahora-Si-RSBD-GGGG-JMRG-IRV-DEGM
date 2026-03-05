@@ -73,30 +73,51 @@ function getEditorValue() {
     return selectedDiv?.textContent === "Asignar a editor..." ? "" : selectedDiv?.textContent;
 }
 
-if (ES_ADMIN && editorWrapper) {
-    const users = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const editores = users.filter(u => u.role === "editor" || u.rol === "editor");
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:3000/api"
+  : "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app/api";
 
-    if (editores.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No hay editores registrados";
-        li.style.color = "rgba(255,255,255,0.6)";
-        li.style.cursor = "not-allowed";
-        optionsList.appendChild(li);
-    } else {
-        editores.forEach(editor => {
-            const nombre = editor.username || editor.user || editor.nombre;
+async function cargarEditores() {
+
+    if (!ES_ADMIN || !editorWrapper) return;
+
+    try {
+
+        const res = await fetch(`${API_URL}/users`);
+        const data = await res.json();
+
+        const editores = data.data.filter(u => u.role === "editor");
+
+        if (editores.length === 0) {
             const li = document.createElement("li");
-            li.textContent = nombre;
-            li.dataset.value = nombre;
+            li.textContent = "No hay editores registrados";
+            li.style.color = "rgba(255,255,255,0.6)";
+            li.style.cursor = "not-allowed";
+            optionsList.appendChild(li);
+            return;
+        }
+
+        editores.forEach(editor => {
+
+            const li = document.createElement("li");
+            li.textContent = editor.username;
+            li.dataset.value = editor.username;
+
             optionsList.appendChild(li);
 
             li.addEventListener("click", () => {
                 selectedDiv.textContent = li.dataset.value;
                 optionsList.style.display = "none";
             });
+
         });
+
+    } catch (error) {
+        console.error("Error cargando editores:", error);
     }
+}
+
+cargarEditores();
 
     // Abrir/cerrar dropdown
     selectedDiv.addEventListener("click", (e) => {
@@ -108,7 +129,7 @@ if (ES_ADMIN && editorWrapper) {
     document.addEventListener("click", () => {
         optionsList.style.display = "none";
     });
-}
+
 
 // ================= Render =================
 function render() {
