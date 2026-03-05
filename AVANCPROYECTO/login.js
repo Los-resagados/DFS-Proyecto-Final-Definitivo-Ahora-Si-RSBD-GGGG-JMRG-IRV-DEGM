@@ -1,4 +1,4 @@
-const API_URL = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app/api/auth/login";
+const API_BASE = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
 
-      const response = await fetch(API_URL, {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -22,33 +22,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
 
+      console.log("RESPUESTA:", data);
+
       if (!response.ok) {
         alert(data.message || "Credenciales incorrectas");
         return;
       }
 
-      // Guardar sesión
-      localStorage.setItem("loggedUser", JSON.stringify({
-        username: data.username,
-        role: data.role,
-        token: data.token
-      }));
-
-      alert("Inicio de sesión exitoso ⚡");
-
-      // Redirección basada en el rol
-      if (data.role === "admin") {
-        window.location.href = "editorjuegos.html";
-      } else if (data.role === "editor") {
-        window.location.href = "editorjuegos.html";
-      } else {
-        // usuario
-        window.location.href = "../index.html";
-      }
+      alert("Login correcto");
 
     } catch (error) {
-      console.error(error);
-      alert("No se pudo conectar con el servidor");
+      console.error("ERROR REAL:", error);
+      alert("Error en login");
     }
 
   });
