@@ -32,84 +32,83 @@ async function loadGame() {
     genreEl.textContent = game.genre || "-";
     yearEl.textContent = game.year || "-";
 
-    // ✅ Imagen principal (Portada)
-    imageEl.src = game.image
-      ? `http://localhost:3000/images/juegos/${game.image}`
-      : "http://localhost:3000/images/juegos/SINIMGS.png";
-    imageEl.alt = game.title || "";
-    imageEl.onerror = () => { imageEl.src = "http://localhost:3000/images/juegos/SINIMGS.png"; };
+// ✅ Imagen principal (Portada)
+imageEl.src = game.image
+  ? `${BACKEND_URL}/images/juegos/${game.image}`
+  : `${BACKEND_URL}/images/juegos/SINIMGS.png`;
+imageEl.alt = game.title || "";
+imageEl.onerror = () => { imageEl.src = `${BACKEND_URL}/images/juegos/SINIMGS.png`; };
 
-    descEl.innerHTML = game.description || "Sin descripción";
+descEl.innerHTML = game.description || "Sin descripción";
 
-    // ===== Trailer =====
-    if (game.trailer) {
-      trailerContainer.innerHTML = `
-        <iframe 
-          src="${game.trailer}" 
-          frameborder="0"
-          allowfullscreen
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
-        </iframe>
-      `;
-    } else {
-      trailerContainer.innerHTML = "<p>No hay tráiler disponible.</p>";
-    }
+// ===== Trailer =====
+if (game.trailer) {
+  trailerContainer.innerHTML = `
+    <iframe 
+      src="${game.trailer}" 
+      frameborder="0"
+      allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;">
+    </iframe>
+  `;
+} else {
+  trailerContainer.innerHTML = "<p>No hay tráiler disponible.</p>";
+}
 
-    const rightColumn = imageEl.parentElement;
+const rightColumn = imageEl.parentElement;
 
-    // ===== Sinopsis =====
-    if (game.sinopsis) {
-      const p = document.createElement("p");
-      p.style.marginTop = "15px";
-      p.style.fontStyle = "italic";
-      p.textContent = game.sinopsis;
-      rightColumn.appendChild(p);
-    }
+// ===== Sinopsis =====
+if (game.sinopsis) {
+  const p = document.createElement("p");
+  p.style.marginTop = "15px";
+  p.style.fontStyle = "italic";
+  p.textContent = game.sinopsis;
+  rightColumn.appendChild(p);
+}
 
-    // ===== Galería (juegosextras) =====
-    if (game.images?.length) {
-      const gallery = document.createElement("div");
+// ===== Galería (juegosextras) =====
+if (game.images?.length) {
+  const gallery = document.createElement("div");
 
-      game.images.forEach(imgName => {
-        const img = document.createElement("img");
-        img.src = imgName
-          ? `http://localhost:3000/images/juegosextras/${imgName}`
-          : "http://localhost:3000/images/juegosextras/SINIMGS.png"; // fallback
-        img.onerror = () => { img.src = "http://localhost:3000/images/juegosextras/SINIMGS.png"; }; // si no carga
-        img.style.width = "100%";
-        img.style.maxWidth = "300px";
-        img.style.marginTop = "10px";
-        gallery.appendChild(img);
-      });
+  game.images.forEach(imgName => {
+    const img = document.createElement("img");
+    img.src = imgName
+      ? `${BACKEND_URL}/images/juegosextras/${imgName}`
+      : `${BACKEND_URL}/images/juegosextras/SINIMGS.png`;
+    img.onerror = () => { img.src = `${BACKEND_URL}/images/juegosextras/SINIMGS.png`; };
+    img.style.width = "100%";
+    img.style.maxWidth = "300px";
+    img.style.marginTop = "10px";
+    gallery.appendChild(img);
+  });
 
-      rightColumn.appendChild(gallery);
-    }
+  rightColumn.appendChild(gallery);
+}
 
-    // ===== Comprar (logos) =====
-    if (game.comprar?.length) {
-      const comprarContainer = document.createElement("div");
-      comprarContainer.style.marginTop = "15px";
+// ===== Comprar (logos) =====
+if (game.comprar?.length) {
+  const comprarContainer = document.createElement("div");
+  comprarContainer.style.marginTop = "15px";
 
-      game.comprar.forEach(store => {
-        const a = document.createElement("a");
-        a.href = store.link || "#";
-        a.target = "_blank";
+  game.comprar.forEach(store => {
+    const a = document.createElement("a");
+    a.href = store.link || "#";
+    a.target = "_blank";
 
-        const img = document.createElement("img");
-        img.src = store.logo
-          ? `http://localhost:3000/images/logos/${store.logo}`
-          : "http://localhost:3000/images/logos/SINIMGS.png"; // fallback
-        img.onerror = () => { img.src = "http://localhost:3000/images/logos/SINIMGS.png"; }; // si no carga
-        img.style.height = "40px";
-        img.style.margin = "5px";
+    const img = document.createElement("img");
+    img.src = store.logo
+      ? `${BACKEND_URL}/images/logos/${store.logo}`
+      : `${BACKEND_URL}/images/logos/SINIMGS.png`;
+    img.onerror = () => { img.src = `${BACKEND_URL}/images/logos/SINIMGS.png`; };
+    img.style.height = "40px";
+    img.style.margin = "5px";
 
-        a.appendChild(img);
-        comprarContainer.appendChild(a);
-      });
+    a.appendChild(img);
+    comprarContainer.appendChild(a);
+  });
 
-      rightColumn.appendChild(comprarContainer);
-    }
-
+  rightColumn.appendChild(comprarContainer);
+}
   } catch (error) {
     console.error(error);
     titleEl.textContent = "Error cargando juego";
