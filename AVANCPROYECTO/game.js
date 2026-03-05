@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/games";
+const API_URL = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app/api/auth/login";
 
 const params = new URLSearchParams(window.location.search);
 const gameId = params.get("id");

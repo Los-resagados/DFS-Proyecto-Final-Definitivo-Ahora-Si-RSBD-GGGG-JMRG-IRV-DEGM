@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/auth/login";
+const API_URL = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app/api/auth/login";
 
 document.addEventListener("DOMContentLoaded", () => {
 
