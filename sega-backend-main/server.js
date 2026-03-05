@@ -74,12 +74,18 @@ app.use(errorMiddleware);
 // ===============================
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB conectado"))
+  .then(async () => {
+    console.log("✅ MongoDB conectado");
+
+    // 👇 Ejecutar seed UNA SOLA VEZ
+    require("./seedAdminUser");
+
+  })
   .catch((err) => {
     console.error("❌ Error MongoDB:", err);
     process.exit(1);
   });
-
+  
 // ===============================
 // ✅ Servidor
 // ===============================
