@@ -1,83 +1,41 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const passport = require('passport');
-const session = require('express-session');
+const API_BASE = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
 
-const app = express();
+document.addEventListener("DOMContentLoaded", () => {
 
-// ===============================
-// ✅ CORS (modo prueba abierto)
-// ===============================
-app.use(cors());
+  const form = document.getElementById("login-form");
 
-// ===============================
-// ✅ Middlewares básicos
-// ===============================
-app.use(express.json());
-app.use("/images", express.static("public/images"));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-// Session + Passport
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'keyboardcat',
-  resave: false,
-  saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-require('./config/passport')(passport);
+    const username = form.username.value;
+    const password = form.password.value;
 
-// ===============================
-// ✅ Variables críticas
-// ===============================
-if (!process.env.MONGO_URI) {
-  console.error("❌ Falta MONGO_URI en el .env");
-  process.exit(1);
-}
+    try {
 
-if (!process.env.JWT_SECRET) {
-  console.error("❌ Falta JWT_SECRET en el .env");
-  process.exit(1);
-}
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-// ===============================
-// ✅ Rutas
-// ===============================
-app.get("/", (req, res) => {
-  res.json({ success: true, message: "API Sega backend corriendo 🚀" });
-});
+      const data = await response.json();
 
-app.get("/api/health", (req, res) => {
-  res.json({ success: true, status: "ok" });
-});
+      console.log("RESPUESTA:", data);
 
-app.use("/api/games", require("./routes/games.routes"));
-app.use("/api/auth", require("./routes/auth.routes"));
-app.use("/api/tareas", require("./routes/tareas.routes"));
-app.use("/api/external", require("./routes/external.routes"));
+      if (!response.ok) {
+        alert(data.message || "Credenciales incorrectas");
+        return;
+      }
 
-// ===============================
-// ✅ Middleware de errores
-// ===============================
-const errorMiddleware = require("./middlewares/errorMiddleware");
-app.use(errorMiddleware);
+      alert("Login correcto");
 
-// ===============================
-// ✅ Conexión a MongoDB
-// ===============================
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB conectado"))
-  .catch((err) => {
-    console.error("❌ Error MongoDB:", err);
-    process.exit(1);
+    } catch (error) {
+      console.error("ERROR REAL:", error);
+      alert("Error en login");
+    }
+
   });
 
-// ===============================
-// ✅ Servidor
-// ===============================
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
