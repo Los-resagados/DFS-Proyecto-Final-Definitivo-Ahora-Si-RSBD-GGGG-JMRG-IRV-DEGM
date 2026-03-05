@@ -187,11 +187,13 @@
 
 </script>
 <script>
+const API_BASE = "https://dfs-proyecto-final-definitivo-ahora-si-rsbd-gggg-production.up.railway.app";
+
 /* ===== CARGAR JUEGOS DESDE BACKEND ===== */
 
 async function cargarJuegos(page = 1) {
     try {
-        const res = await fetch(`http://localhost:3000/api/games?page=${page}&limit=6`);
+        const res = await fetch(`${API_BASE}/api/games?page=${page}&limit=6`);
         const data = await res.json();
 
         const container = document.querySelector("section.juegos");
@@ -207,7 +209,7 @@ async function cargarJuegos(page = 1) {
             article.innerHTML = `
                 <h3>${juego.title}</h3>
                 <a href="AVANCPROYECTO/game.html?id=${juego._id}">
-                    <img src="http://localhost:3000/images/juegos/${juego.image}" 
+                    <img src="${API_BASE}/images/juegos/${juego.image}">
                     alt="${juego.title}"
                     onerror="this.src='IMGS/juegos/SINIMGS.png'">
                 </a>
@@ -257,7 +259,7 @@ const loginForm = document.getElementById("login-form");
 const googleOAuthBtn = document.getElementById("google-oauth");
 const microsoftOAuthBtn = document.getElementById("microsoft-oauth");
 
-const API_URL = "http://localhost:3000";
+const API_URL = API_BASE;
 
 // Abrir/cerrar modal
 loginBtn.onclick = (e) => {
